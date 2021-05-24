@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using InputSource = UnityEngine.Input;
 
 public class OrbitalCamera : MonoBehaviour
@@ -9,23 +10,43 @@ public class OrbitalCamera : MonoBehaviour
 
     public float distance = 5f;
     public float sensitivity = 1000f;
-    public Transform target;
+    Transform target;
 
-    public bool groundLevelClamp = true;
+    [SerializeField, Tooltip("Prevents carema from going below the ground level.")]
+    private bool groundLevelClamp = true;
     public float heightOffset = 0.2f;
 
+    [SerializeField, Tooltip("Time refuired for camera to enter the idle state.")]
+    float inactivityLimit = 5f;
+    float inactivityTimer = 0;
+    float xIdleRot = 0;
+    float yIdleRot = 0.01f;
 
     #region ---UnityCallbacks---
     private void Start()
     {
-        UpdateCameraPos();
+        UpdateActiveVehicle();
+        //UpdateCameraPos();
     }
 
     private void Update()
     {
+        UpdateActiveVehicle(); 
+
         if (InputSource.GetMouseButton(0))
         {
+            SharedData.IsIdle = false;
             UpdateCameraPos();
+            inactivityTimer = 0;
+        }
+        else
+        {
+            inactivityTimer += Time.deltaTime;
+            if (inactivityTimer > inactivityLimit)
+            {
+                SharedData.IsIdle = true;
+                UpdateCameraPos();
+            }
         }
     }
 
@@ -33,8 +54,8 @@ public class OrbitalCamera : MonoBehaviour
 
     private void UpdateCameraPos()
     {
-        xRot += InputSource.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
-        yRot += InputSource.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+        xRot += ( (!SharedData.IsIdle) ? InputSource.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
+        yRot += ( (!SharedData.IsIdle) ? InputSource.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
 
         if (xRot > 90f)
         {
@@ -46,10 +67,20 @@ public class OrbitalCamera : MonoBehaviour
         }
 
         transform.position = target.position + Quaternion.Euler(xRot, yRot, 0f) * (distance * -Vector3.back);
+
         if (groundLevelClamp && target.position.y + heightOffset > transform.position.y)
         {
             transform.position = new Vector3(transform.position.x, target.position.y + heightOffset, transform.position.z);
         }
+
         transform.LookAt(target.position, Vector3.up);
+    }
+
+    /// <summary>
+    /// Sets the camera's target to the Active Vehicle.
+    /// </summary>
+    private void UpdateActiveVehicle()
+    {
+        target = SharedData.ActiveVehicle.transform;
     }
 }

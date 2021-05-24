@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37dfc828c3f50904791f39e02b27bb4c, type: 3}
+  m_Name: RoofScoop
+  m_EditorClassIdentifier: 
+  Name: Roof Scoop
+  variants:
+  - {fileID: 11400000, guid: 32bd7aeb854549945aabd52a1696b315, type: 2}
+  - {fileID: 11400000, guid: e6df5e3998c271e42a2bf28b3670243d, type: 2}
+  - {fileID: 11400000, guid: 9c4f487c9bac70148a87ee86f3165758, type: 2}
+  - {fileID: 11400000, guid: 5b1f2ea9f93e0984cbb685aebbaf7e42, type: 2}

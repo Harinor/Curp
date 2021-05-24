@@ -3,34 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-[RequireComponent(typeof(SharedData))]
 public class UI_Manager : MonoBehaviour
 {
-    [SerializeField] Transform mainPanel;
     [SerializeField] GameObject modPrefab;
 
-    SharedData sharedData;
-    
+
+    #region --- UNITY CALLBACKS ----
     private void Start()
     {
-        sharedData = GetComponent<SharedData>();
         UpdateSelections();
     }
 
-    public void ChangeColor(int selection)
-    {
-        Debug.Log($"Selection: {selection}");
-        GameObject.Find("body").GetComponent<Renderer>().material.color = Color.white;
-    }
+    #endregion
 
+    #region --- PUBLIC METHODS ---
     public void UpdateSelections()
     {
+        Transform mainPanel = SharedData.MainPanel;
+        if (mainPanel == null) return;
+
         foreach (Transform child in mainPanel)
         {
             Destroy(child.gameObject);
         }
 
-        foreach (var modification in sharedData.activeVehicle.modifications)
+        foreach (var modification in SharedData.ActiveVehicle.modifications)
         {
             if (modification.variants.Count < 1)
             {
@@ -47,9 +44,11 @@ public class UI_Manager : MonoBehaviour
                 }
                 var dropdown = newMod.GetComponentInChildren<TMP_Dropdown>();
                 dropdown.AddOptions(newModVariants);
-                UnityEditor.Events.UnityEventTools.AddPersistentListener(dropdown.onValueChanged, ChangeColor);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(dropdown.onValueChanged, modification.ApplyVariant);
             }
         }
 
     }
-}
+    #endregion
+} 
+

@@ -6,14 +6,21 @@ using System.Reflection;
 using UnityEditor;
 using System.Collections;
 
-/* --- EXAMPLES ---
-  public bool WanderAround;
- [ConditionalField("WanderAround")] public float WanderDistance = 5;
- 
- public AIState NextState = AIState.None;
- [ConditionalField("NextState", AIState.Idle)] public float IdleTime = 5; 
+#region Refs
+/* 
+--- SOURCEREF ---
+https://answers.unity.com/questions/192895/hideshow-properties-dynamically-in-inspector.html
+https://github.com/Deadcows/MyBox/blob/master/Attributes/ConditionalFieldAttribute.cs
+
+--- EXAMPLES ---
+public bool WanderAround;
+[ConditionalField("WanderAround")] public float WanderDistance = 5;
+
+public AIState NextState = AIState.None;
+[ConditionalField("NextState", AIState.Idle)] public float IdleTime = 5; 
 */
 
+#endregion
 
 namespace ConditionalInspectorFields
 {
