@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using InputSource = UnityEngine.Input;
 
 public class OrbitalCamera : MonoBehaviour
 {
@@ -33,7 +32,7 @@ public class OrbitalCamera : MonoBehaviour
     {
         UpdateActiveVehicle(); 
 
-        if (InputSource.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             SharedData.IsIdle = false;
             UpdateCameraPos();
@@ -54,8 +53,10 @@ public class OrbitalCamera : MonoBehaviour
 
     private void UpdateCameraPos()
     {
-        xRot += ( (!SharedData.IsIdle) ? InputSource.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
-        yRot += ( (!SharedData.IsIdle) ? InputSource.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
+        if (!TopHalf()) return;
+        
+        xRot += ( (!SharedData.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
+        yRot += ( (!SharedData.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
 
         if (xRot > 90f)
         {
@@ -74,6 +75,15 @@ public class OrbitalCamera : MonoBehaviour
         }
 
         transform.LookAt(target.position, Vector3.up);
+
+        static bool TopHalf()
+        {
+            if (Input.mousePosition.y < Screen.height / 2.0f) return false;
+
+            //if (Input.GetTouch(0).position.y < Screen.height / 2.0f) return false;
+            
+            return true;
+        }
     }
 
     /// <summary>

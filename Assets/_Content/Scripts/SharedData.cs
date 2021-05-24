@@ -29,6 +29,10 @@ public class SharedData : MonoBehaviour
         set { instance.isIdle = value; }
     }
 
+    [Header("Cameras")]
+    public Camera primaryCamera;
+    public Camera secondaryCamera;
+
     /// <summary>
     /// Determines which UI scene to load. The scene name must match the corresponding enum option exactly.
     /// </summary>
@@ -37,7 +41,9 @@ public class SharedData : MonoBehaviour
         MainScene = 0,
         UI_Scene_Prototype = 1,
     }
+    [Header("UI")]
     [SerializeField] UiScenes uiScene = UiScenes.UI_Scene_Prototype;
+    bool hasLoadedUI = false;
 
     #region --- UNITY CALLBACKS ---
     private void Awake()
@@ -55,6 +61,24 @@ public class SharedData : MonoBehaviour
     private void Start()
     {
         LoadUI();
+        //TODO: replace temporary
+        //SceneManager.LoadScene("ModSelectionScene", LoadSceneMode.Additive);
+        Debug.LogWarning($"{Screen.width}:{Screen.height}");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            if (hasLoadedUI)
+            {
+                UnloadUI();
+            }
+            else
+            {
+                LoadUI();
+            }
+        }
     }
 
     #endregion
@@ -64,6 +88,14 @@ public class SharedData : MonoBehaviour
         string output = uiScene.ToString();
         Debug.Log($"Loading {output}...");
         SceneManager.LoadScene(output, LoadSceneMode.Additive);
+        hasLoadedUI = true;
+    }
+
+    private void UnloadUI()
+    {
+        string output = uiScene.ToString();
+        SceneManager.UnloadSceneAsync(output);
+        hasLoadedUI = false;
     }
 
 }
