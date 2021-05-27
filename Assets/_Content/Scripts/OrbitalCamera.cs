@@ -11,7 +11,7 @@ public class OrbitalCamera : MonoBehaviour
     public float sensitivity = 1000f;
     Transform target;
 
-    [SerializeField, Tooltip("Prevents carema from going below the ground level.")]
+    [SerializeField, Tooltip("Prevents camera from going below the ground level.")]
     private bool groundLevelClamp = true;
     public float heightOffset = 0.2f;
 
@@ -30,11 +30,9 @@ public class OrbitalCamera : MonoBehaviour
 
     private void Update()
     {
-        UpdateActiveVehicle(); 
-
         if (Input.GetMouseButton(0))
         {
-            SharedData.IsIdle = false;
+            MasterManager.IsIdle = false;
             UpdateCameraPos();
             inactivityTimer = 0;
         }
@@ -43,7 +41,7 @@ public class OrbitalCamera : MonoBehaviour
             inactivityTimer += Time.deltaTime;
             if (inactivityTimer > inactivityLimit)
             {
-                SharedData.IsIdle = true;
+                MasterManager.IsIdle = true;
                 UpdateCameraPos();
             }
         }
@@ -53,10 +51,10 @@ public class OrbitalCamera : MonoBehaviour
 
     private void UpdateCameraPos()
     {
-        if (!TopHalf()) return;
+        if (!IsInValidScreenSection()) return;
         
-        xRot += ( (!SharedData.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
-        yRot += ( (!SharedData.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
+        xRot += ( (!MasterManager.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
+        yRot += ( (!MasterManager.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
 
         if (xRot > 90f)
         {
@@ -76,9 +74,10 @@ public class OrbitalCamera : MonoBehaviour
 
         transform.LookAt(target.position, Vector3.up);
 
-        static bool TopHalf()
+        static bool IsInValidScreenSection()
         {
-            if (Input.mousePosition.y < Screen.height / 2.0f) return false;
+            if (Input.mousePosition.y < Screen.height / 2.0f && MasterManager.instance.cameraManager.primaryCamera.rect.y != 0) 
+                return false;
 
             //if (Input.GetTouch(0).position.y < Screen.height / 2.0f) return false;
             
@@ -87,10 +86,10 @@ public class OrbitalCamera : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets the camera's target to the Active Vehicle.
+    /// Sets the camera's target to the Active Vehicle. Callback from the Selections script.
     /// </summary>
-    private void UpdateActiveVehicle()
+    public void UpdateActiveVehicle()
     {
-        target = SharedData.ActiveVehicle.transform;
+        target = MasterManager.ActiveVehicle.transform;
     }
 }

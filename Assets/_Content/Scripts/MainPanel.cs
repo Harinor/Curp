@@ -11,9 +11,9 @@ public class MainPanel : MonoBehaviour
 
     public bool SetAsSharedDataMainPanel()
     {
-        if (SharedData.MainPanel == null)
+        if (MasterManager.MainPanel == null)
         {
-            SharedData.MainPanel = this.transform;
+            MasterManager.MainPanel = this.transform;
             return true;
         }
         return false;

@@ -11,7 +11,7 @@ public class SpoilerVariant : ModificationVariant
     public override void Apply()
     {
         base.Apply();
-        Transform slot = SharedData.ActiveVehicle.transform.Find(spoilerSlot);
+        Transform slot = MasterManager.ActiveVehicle.transform.Find(spoilerSlot);
         foreach (Transform child in slot)
         {
             Destroy(child.gameObject);

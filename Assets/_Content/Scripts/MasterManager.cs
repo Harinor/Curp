@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SharedData : MonoBehaviour
+public class MasterManager : MonoBehaviour
 {
-    public static SharedData instance;
+    public static MasterManager instance;
 
     private Transform _mainPanel;
     public static Transform MainPanel
@@ -29,17 +29,16 @@ public class SharedData : MonoBehaviour
         set { instance.isIdle = value; }
     }
 
-    [Header("Cameras")]
-    public Camera primaryCamera;
-    public Camera secondaryCamera;
+    [HideInInspector]
+    public CameraManager cameraManager;
 
     /// <summary>
     /// Determines which UI scene to load. The scene name must match the corresponding enum option exactly.
     /// </summary>
     enum UiScenes 
     {
-        MainScene = 0,
-        UI_Scene_Prototype = 1,
+        MainScene,
+        UI_Scene_Prototype,
     }
     [Header("UI")]
     [SerializeField] UiScenes uiScene = UiScenes.UI_Scene_Prototype;
@@ -60,6 +59,7 @@ public class SharedData : MonoBehaviour
 
     private void Start()
     {
+        cameraManager = GetComponent<CameraManager>();
         LoadUI();
         //TODO: replace temporary
         //SceneManager.LoadScene("ModSelectionScene", LoadSceneMode.Additive);
@@ -68,21 +68,11 @@ public class SharedData : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            if (hasLoadedUI)
-            {
-                UnloadUI();
-            }
-            else
-            {
-                LoadUI();
-            }
-        }
+        ProcessInput();
     }
-
     #endregion
 
+    #region --- METHODS ---
     private void LoadUI()
     {
         string output = uiScene.ToString();
@@ -98,4 +88,31 @@ public class SharedData : MonoBehaviour
         hasLoadedUI = false;
     }
 
+    private void ProcessInput()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            if (hasLoadedUI)
+            {
+                UnloadUI();
+            }
+            else
+            {
+                LoadUI();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            cameraManager.HideSelectionMenu();
+        }
+        else if (Input.GetKeyDown(KeyCode.KeypadPlus))
+        {
+            cameraManager.ShowSelectionMenu();
+        }
+
+
+    }
+
+    #endregion
 }

@@ -11,6 +11,6 @@ public abstract class ModificationVariant : ScriptableObject
 
     public virtual void Apply()
     {
-        Debug.Log($"Applying {Name} to {SharedData.ActiveVehicle.Name}.");
+        Debug.Log($"Applying {Name} to {MasterManager.ActiveVehicle.Name}.");
     }
 }

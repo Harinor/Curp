@@ -19,7 +19,7 @@ public class UI_Manager : MonoBehaviour
     #region --- PUBLIC METHODS ---
     public void UpdateSelections()
     {
-        Transform mainPanel = SharedData.MainPanel;
+        Transform mainPanel = MasterManager.MainPanel;
         if (mainPanel == null) return;
 
         foreach (Transform child in mainPanel)
@@ -27,7 +27,7 @@ public class UI_Manager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var modification in SharedData.ActiveVehicle.modifications)
+        foreach (var modification in MasterManager.ActiveVehicle.modifications)
         {
             if (modification.variants.Count < 1)
             {
@@ -48,6 +48,16 @@ public class UI_Manager : MonoBehaviour
             }
         }
 
+    }
+
+    public void OnButtonClickUp()
+    {
+        Selections.instance.MoveOut();
+    }
+
+    public void OnButtonClickDown()
+    {
+        Selections.instance.MoveIn();
     }
     #endregion
 } 

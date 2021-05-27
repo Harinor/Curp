@@ -64,7 +64,7 @@ public class WheelVariant : ModificationVariant
     {
         foreach (var slotName in modSlots)
         {
-            Transform slot = SharedData.ActiveVehicle.transform.Find(slotName);
+            Transform slot = MasterManager.ActiveVehicle.transform.Find(slotName);
 
             //--- Destroy old mods ---
             foreach (Transform child in slot)

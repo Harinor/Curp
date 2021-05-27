@@ -18,7 +18,7 @@ public class RoofscoopVariant : ModificationVariant
     public override void Apply()
     {
         base.Apply();
-        Transform slot = SharedData.ActiveVehicle.transform.Find(roofscoopSlot);
+        Transform slot = MasterManager.ActiveVehicle.transform.Find(roofscoopSlot);
 
         foreach (Transform child in slot)
         {
@@ -33,7 +33,7 @@ public class RoofscoopVariant : ModificationVariant
                 var renderers = newMod.GetComponentsInChildren<Renderer>();
                 foreach (var rend in renderers)
                 {
-                    rend.material.color = SharedData.ActiveVehicle.currentColor;
+                    rend.material.color = MasterManager.ActiveVehicle.currentColor;
                 }              
             }
         }

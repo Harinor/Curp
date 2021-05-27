@@ -10,13 +10,13 @@ public class ColorVariant : ModificationVariant
     public override void Apply()
     {
         base.Apply();
-        Transform body = SharedData.ActiveVehicle.transform.Find(bodySlot);
+        Transform body = MasterManager.ActiveVehicle.transform.Find(bodySlot);
         if (body != null)
         {
             if (body.TryGetComponent(out Renderer rend))
             {
                 rend.material.color = color;
-                SharedData.ActiveVehicle.currentColor = color;
+                MasterManager.ActiveVehicle.currentColor = color;
             }     
         }
     }
