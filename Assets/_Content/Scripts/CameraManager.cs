@@ -14,10 +14,42 @@ public class CameraManager : MonoBehaviour
 
     bool isTransitioning = false;
 
-    enum SelectionState { Hidden, Displayed }
-    SelectionState selectionState = SelectionState.Displayed;
+    public enum SelectionState { Hidden, Displayed }
+    [HideInInspector]
+    public SelectionState selectionState = SelectionState.Hidden;
+
+    public static CameraManager instance;
+
+    #region --- UNITY CALLBACKS ----
+    private void Start()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
+    #endregion
 
     #region --- METHODS ---
+    public void ToggleSelectionMenu()
+    {
+        if (!isTransitioning)
+        {
+            switch (selectionState)
+            {
+                case SelectionState.Hidden:
+                    ShowSelectionMenu();
+                    break;
+                case SelectionState.Displayed:
+                    HideSelectionMenu();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }  
+        
     public void ShowSelectionMenu()
     {
         if (isTransitioning == false)
@@ -36,8 +68,6 @@ public class CameraManager : MonoBehaviour
 
     private IEnumerator AdjustSelectionMenuCoroutine(SelectionState selectionState, float transitionSpeed)
     {  
-        //if (isTransitioning) yield break;
-
         isTransitioning = true;
         float targetPrimaryPosY = 0;
         float targetSecondaryPosY = -1;
@@ -52,7 +82,8 @@ public class CameraManager : MonoBehaviour
             case SelectionState.Displayed:
                 this.selectionState = SelectionState.Displayed;
                 targetPrimaryPosY = primaryCameraLimitY;
-                targetSecondaryPosY = -primaryCameraLimitY; 
+                targetSecondaryPosY = -primaryCameraLimitY;
+                Selections.instance.UpdateSelectionMenu(true);
                 break;
             default:
                 break;
@@ -68,14 +99,14 @@ public class CameraManager : MonoBehaviour
 
             primaryCamera.rect = new Rect(0, newPrimaryCameraPosY, 1, 1);
             secondaryCamera.rect = new Rect(0, newSecondaryCameraPosY, 1, 1);
-            Debug.Log(primaryCamera.rect.y);
+            //Debug.Log(primaryCamera.rect.y);
             yield return new WaitForEndOfFrame();
         }
 
         primaryCamera.rect = new Rect(0, targetPrimaryPosY, 1, 1);
         secondaryCamera.rect = new Rect(0, targetSecondaryPosY, 1, 1);
         isTransitioning = false;
-        Debug.LogError("Adjustment done!");
+        //Debug.LogError("Adjustment done!");
     }
     #endregion
 }

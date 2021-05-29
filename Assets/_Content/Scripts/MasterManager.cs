@@ -32,12 +32,14 @@ public class MasterManager : MonoBehaviour
     [HideInInspector]
     public CameraManager cameraManager;
 
+    public GameObject defaultDirectionalLight;
+
     /// <summary>
     /// Determines which UI scene to load. The scene name must match the corresponding enum option exactly.
     /// </summary>
     enum UiScenes 
     {
-        MainScene,
+        None,
         UI_Scene_Prototype,
     }
     [Header("UI")]
@@ -75,9 +77,13 @@ public class MasterManager : MonoBehaviour
     #region --- METHODS ---
     private void LoadUI()
     {
-        string output = uiScene.ToString();
-        Debug.Log($"Loading {output}...");
-        SceneManager.LoadScene(output, LoadSceneMode.Additive);
+        if (uiScene != UiScenes.None)
+        {
+            string output = uiScene.ToString();
+            Debug.Log($"Loading {output}...");
+            SceneManager.LoadScene(output, LoadSceneMode.Additive);
+        }
+
         hasLoadedUI = true;
     }
 
@@ -111,7 +117,38 @@ public class MasterManager : MonoBehaviour
             cameraManager.ShowSelectionMenu();
         }
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Selections.instance.UpdateSelectionMenu();
+        }
+    }
 
+    public void ToggleVehicleLights()
+    {
+        if (ActiveVehicle != null && ActiveVehicle.lights != null)
+        {
+            if (ActiveVehicle.lights.activeSelf)
+            {
+                ActiveVehicle.lights.SetActive(false);
+                if (defaultDirectionalLight != null)
+                {
+                    defaultDirectionalLight.SetActive(false);
+                }
+            }
+            else
+            {
+                ActiveVehicle.lights.SetActive(true);
+                if (defaultDirectionalLight != null)
+                {
+                    defaultDirectionalLight.SetActive(true);
+                }
+            }
+        }
+    }
+
+    public void ToggleInfoPanel()
+    {
+        UI_Manager.instance.ToggleInfoPanel();
     }
 
     #endregion

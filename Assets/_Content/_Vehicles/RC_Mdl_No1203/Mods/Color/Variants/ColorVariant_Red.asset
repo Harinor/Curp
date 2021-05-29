@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6fe2d4f5b915af4d96240cdf3ad8d05, type: 3}
   m_Name: ColorVariant_Red
   m_EditorClassIdentifier: 
-  Name: 'Color: Red'
+  Name: Metallic Red
+  previewPrefab: {fileID: 1407282443881329018, guid: 8e9f656d5c1afd2489c0cabd103c2d84, type: 3}
   color: {r: 0.7075472, g: 0.18356179, b: 0.18356179, a: 0}
+  material: {fileID: 2100000, guid: 56c6f066d45181c438437df9828d379a, type: 2}
+  bodySlot: body

@@ -5,59 +5,42 @@ using TMPro;
 
 public class UI_Manager : MonoBehaviour
 {
-    [SerializeField] GameObject modPrefab;
+    public GameObject infoPanel;
+    public GameObject mainCanvas;
 
+    public static UI_Manager instance;
 
     #region --- UNITY CALLBACKS ----
     private void Start()
     {
-        UpdateSelections();
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     #endregion
 
     #region --- PUBLIC METHODS ---
-    public void UpdateSelections()
+    public void ToggleInfoPanel()
     {
-        Transform mainPanel = MasterManager.MainPanel;
-        if (mainPanel == null) return;
-
-        foreach (Transform child in mainPanel)
+        if (infoPanel != null)
         {
-            Destroy(child.gameObject);
-        }
-
-        foreach (var modification in MasterManager.ActiveVehicle.modifications)
-        {
-            if (modification.variants.Count < 1)
+            if (infoPanel.activeSelf)
             {
-                continue;
+                infoPanel.SetActive(false);
+                mainCanvas.SetActive(true);
             }
             else
             {
-                var newMod = Instantiate(modPrefab, mainPanel);
-                newMod.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = modification.Name;
-                List<string> newModVariants = new List<string>();
-                foreach (var variant in modification.variants)
+                infoPanel.SetActive(true);
+                mainCanvas.SetActive(false);
+                if (CameraManager.instance.selectionState == CameraManager.SelectionState.Displayed)
                 {
-                    newModVariants.Add(variant.Name);
+                    CameraManager.instance.HideSelectionMenu();
                 }
-                var dropdown = newMod.GetComponentInChildren<TMP_Dropdown>();
-                dropdown.AddOptions(newModVariants);
-                UnityEditor.Events.UnityEventTools.AddPersistentListener(dropdown.onValueChanged, modification.ApplyVariant);
             }
         }
-
-    }
-
-    public void OnButtonClickUp()
-    {
-        Selections.instance.MoveOut();
-    }
-
-    public void OnButtonClickDown()
-    {
-        Selections.instance.MoveIn();
     }
     #endregion
 } 

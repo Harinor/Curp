@@ -8,6 +8,7 @@ using UnityEngine;
 public abstract class ModificationVariant : ScriptableObject
 {
     public string Name = "variant name";
+    public GameObject previewPrefab;
 
     public virtual void Apply()
     {

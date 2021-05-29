@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WheelVariant_3
   m_EditorClassIdentifier: 
   Name: 'Wheels: Variant 3'
+  previewPrefab: {fileID: 4881457997112544899, guid: fcb00c18dbf02344faa75c89440028e1, type: 3}
   wheelFront: {fileID: 4881457997112544899, guid: fcb00c18dbf02344faa75c89440028e1, type: 3}
   wheelRear: {fileID: 4881457997112544899, guid: fcb00c18dbf02344faa75c89440028e1, type: 3}
   wheelSlots:
