@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RoofscoopVariant_1_Painted
   m_EditorClassIdentifier: 
   Name: 'Roof Scoop 1: Painted'
+  previewPrefab: {fileID: 2639136993336904091, guid: 80a1f8de7f36aba46b629f4cddde6f65, type: 3}
   roofScoop: {fileID: 2639136993336904091, guid: 80a1f8de7f36aba46b629f4cddde6f65, type: 3}
   roofscoopSlot: roofscoop_slot
   syncBodyColor: 1

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RoofscoopVariant_1_CarbobFibre
   m_EditorClassIdentifier: 
   Name: 'Roof Scoop 1: Carbon Fibre'
+  previewPrefab: {fileID: 2110601091681505143, guid: e79d62e98bf412844944c21b6dec6871, type: 3}
   roofScoop: {fileID: 2110601091681505143, guid: e79d62e98bf412844944c21b6dec6871, type: 3}
   roofscoopSlot: roofscoop_slot
   syncBodyColor: 0

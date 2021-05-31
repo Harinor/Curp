@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: SpoilerVariant_1
   m_EditorClassIdentifier: 
   Name: 'Spoiler 1: Aluminium'
+  previewPrefab: {fileID: 5118911368796202686, guid: a21ea8d9d916cd448881698235ca9b19, type: 3}
+  previewScale: 0.5
   spoiler: {fileID: 5118911368796202686, guid: a21ea8d9d916cd448881698235ca9b19, type: 3}
   spoilerSlot: spoiler_slot

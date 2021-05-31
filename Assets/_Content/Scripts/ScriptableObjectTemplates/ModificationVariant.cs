@@ -9,6 +9,7 @@ public abstract class ModificationVariant : ScriptableObject
 {
     public string Name = "variant name";
     public GameObject previewPrefab;
+    [Range(0f, 2f)] public float previewScale = 1;
 
     public virtual void Apply()
     {

@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: RoofscoopVariant_None
   m_EditorClassIdentifier: 
   Name: no roof sccop
+  previewPrefab: {fileID: 2725109483987885176, guid: 0e64f9516fcbf0d418d8af9d7ed6ebef, type: 3}
   roofScoop: {fileID: 0}
   roofscoopSlot: roofscoop_slot
+  syncBodyColor: 0

@@ -64,6 +64,7 @@ public class Selections : MonoBehaviour
             instance = this;
         }
         defaultPosition = transform.position;
+        UpdateSelectionMenu(true);
     }
 
     private void Update()
@@ -71,22 +72,6 @@ public class Selections : MonoBehaviour
         Slot0 = scrollSnapVehicles.CurrentPanel;
         Slot1 = scrollSnapModifications.CurrentPanel;
         Slot2 = scrollSnapVariants.CurrentPanel;
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            Debug.Log($"MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].activeVariant = {MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].activeVariant}; scrollSnapVariants.CurrentPanel: {scrollSnapVariants.CurrentPanel}");
-        
-            if (MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].activeVariant != scrollSnapVariants.CurrentPanel)
-            {
-  
-                int activeVariantIndex = MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].activeVariant;
-                GameObject newPreview = 
-                    MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].modification.variants[activeVariantIndex].previewPrefab;
-                Instantiate(newPreview, modificationsContent.GetChild(scrollSnapModifications.CurrentPanel));
-            }        
-        }
-
-
-
     } 
     #endregion
 
@@ -99,10 +84,10 @@ public class Selections : MonoBehaviour
         else
         {
             ActiveEnvironment++;
-            UpdateSelectionMenu();
+            //UpdateSelectionMenu();
             StopAllCoroutines();
             StartCoroutine(TranslateSelections((int)ActiveEnvironment));
-            Debug.LogError($"SelectionsArrowUp-Selection: {ActiveEnvironment}");
+            //Debug.LogError($"SelectionsArrowUp-Selection: {ActiveEnvironment}");            
         }
     }
 
@@ -115,10 +100,10 @@ public class Selections : MonoBehaviour
         else
         {
             ActiveEnvironment--;
-            UpdateSelectionMenu();
+            //UpdateSelectionMenu();
             StopAllCoroutines();
             StartCoroutine(TranslateSelections((int)ActiveEnvironment));
-            Debug.LogError($"SelectionsArrowDown-Selection: {ActiveEnvironment}");
+            //Debug.LogError($"SelectionsArrowDown-Selection: {ActiveEnvironment}");
         }
     }
 
@@ -139,14 +124,43 @@ public class Selections : MonoBehaviour
 
     public void OnVariantPanelChanged() //Variants
     {
-        var currentMod = MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].modification;
-        if (currentMod != null)
+        var currentModSlot = MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel];
+        if (currentModSlot.modification != null)
         {
-            currentMod.ApplyVariant(scrollSnapVariants.CurrentPanel);
+            currentModSlot.modification.ApplyVariant(scrollSnapVariants.CurrentPanel);
             MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].activeVariant = scrollSnapVariants.CurrentPanel;
+            UpdateActiveVariantPreviewForAllModifications();
         }
 
         OnVariantPanelChangedCallback.Invoke();
+    }
+
+    void UpdateActiveVariantPreviewForAllModifications()
+    {
+        for (int i = 0; i < modificationsContent.childCount; i++)
+        {
+            var modSlot = MasterManager.ActiveVehicle.modificationSlots[i];
+            var previewSlot = modificationsContent.GetChild(i).GetChild(0);
+            if (previewSlot != null && previewSlot.childCount > 0)
+            {
+                foreach (Transform child in previewSlot)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+            GameObject previewPrefab = modSlot.modification.variants[modSlot.activeVariant].previewPrefab;
+            GameObject preview = Instantiate(previewPrefab, previewSlot);
+            //TODO: kinda repeated code here, possibly better to create GetPreview method on variants...
+            float previewScale = modSlot.modification.variants[modSlot.activeVariant].previewScale;
+            if (modSlot.modification.variants[modSlot.activeVariant].previewScale != 1)
+            {
+                preview.transform.localScale = new Vector3(
+                    preview.transform.localScale.x * previewScale,
+                    preview.transform.localScale.y * previewScale,
+                    preview.transform.localScale.z * previewScale);
+            }
+            MoveToLayer(preview.transform, 7);
+        }
     }
 
     public void OnModificationPanelChanged() //Modifications
@@ -172,6 +186,8 @@ public class Selections : MonoBehaviour
         {
             UpdateSelectionMenu_Variants();
         }
+
+        Invoke(nameof(UpdateActiveVariantPreviewForAllModifications), .1f);
     }
 
     public void UpdateSelectionMenu_Variants()
@@ -181,63 +197,32 @@ public class Selections : MonoBehaviour
             scrollSnapVariants.RemoveFromBack();
         }
 
-        //Initial slot
         var currentModSlot = MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel];
         int activeVariantIndex = currentModSlot.activeVariant;
-        CreateVariantFromIndex(currentModSlot.modification, activeVariantIndex);
 
-        for (int i = activeVariantIndex - 1; i >= 0; i--)
+        foreach (ModificationVariant variant in currentModSlot.modification.variants)
         {
-            CreateVariantFromIndex(currentModSlot.modification, i, true);
-        }
-
-        for (int i = activeVariantIndex + 1; i < currentModSlot.modification.variants.Count; i++)
-        {
-            CreateVariantFromIndex(currentModSlot.modification, i);
-        }
-
-        scrollSnapVariants.startingPanel = activeVariantIndex;
-
-        scrollSnapVariants.Setup();
-
-
-
-        //foreach (ModificationVariant variant in MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel].modification.variants)
-        //{
-        //    var newVariant = Instantiate(slotPrefab);
-        //    newVariant.GetComponentInChildren<Text>().text = variant.Name;
-        //    if (variant.previewPrefab != null)
-        //    {
-        //        GameObject preview = Instantiate(variant.previewPrefab, newVariant.transform.GetChild(0));
-        //        MoveToLayer(preview.transform, 7);
-
-        //    }
-        //    scrollSnapVariants.AddToBack(newVariant);
-        //    Destroy(newVariant);
-        //}
-
-        void CreateVariantFromIndex(Modification mod, int index, bool toFront = false)
-        {
-            var variant = mod.variants[index];
             var newVariant = Instantiate(slotPrefab);
             newVariant.GetComponentInChildren<Text>().text = variant.Name;
             if (variant.previewPrefab != null)
             {
                 GameObject preview = Instantiate(variant.previewPrefab, newVariant.transform.GetChild(0));
+                if (variant.previewScale != 1)
+                {
+                    preview.transform.localScale = new Vector3(
+                        preview.transform.localScale.x * variant.previewScale,
+                        preview.transform.localScale.y * variant.previewScale,
+                        preview.transform.localScale.z * variant.previewScale);
+                }
                 MoveToLayer(preview.transform, 7);
             }
-
-            if (toFront)
-            {
-                scrollSnapVariants.AddToFront(newVariant);
-            }
-            else
-            {
-                scrollSnapVariants.AddToBack(newVariant);
-            }
-
+            scrollSnapVariants.AddToBack(newVariant);
             Destroy(newVariant);
         }
+
+        //--- had to change the Setup method to public to make this work ---
+        scrollSnapVariants.startingPanel = activeVariantIndex;
+        scrollSnapVariants.Setup();
     }
 
     public void UpdateSelectionMenu_Modifications()
@@ -250,25 +235,13 @@ public class Selections : MonoBehaviour
         foreach (Vehicle.ModificationSlot modSlot in MasterManager.ActiveVehicle.modificationSlots)
         {
             Modification mod = modSlot.modification;
-            var newMod = Instantiate(slotPrefab);
+            GameObject newMod = Instantiate(slotPrefab);
             newMod.GetComponentInChildren<Text>().text = mod.Name;
             scrollSnapModifications.AddToBack(newMod);
             Destroy(newMod);
         }
 
-
         UpdateSelectionMenu_Variants();
-    }
-
-    //TODO: Implement me, cars are static for now
-    public void UpdateSelectionMenu_Vehicles()
-    {
-        while (vehiclesContent.childCount > 0)
-        {
-            scrollSnapVehicles.RemoveFromBack();
-        }
-
-        //...
     }
 
     /// <summary>
