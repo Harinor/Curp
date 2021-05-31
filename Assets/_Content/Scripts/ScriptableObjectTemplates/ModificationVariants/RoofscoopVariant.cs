@@ -30,15 +30,18 @@ public class RoofscoopVariant : ModificationVariant
             var newMod = Instantiate(roofScoop, slot);
             if (syncBodyColor)
             {
-                var renderers = newMod.GetComponentsInChildren<Renderer>();
-                foreach (var rend in renderers)
+                if (MasterManager.ActiveVehicle.TryGetComponent<Renderer>(out Renderer vehicleRenderer))
                 {
-                    rend.material.color = MasterManager.ActiveVehicle.currentColor;
-                }              
+                    Material newMat = vehicleRenderer.material;
+                    var renderers = newMod.GetComponentsInChildren<Renderer>();
+                    foreach (var rend in renderers)
+                    {
+                        rend.material = newMat;
+                    }  
+                }      
             }
         }
     }
-
 }
 
 

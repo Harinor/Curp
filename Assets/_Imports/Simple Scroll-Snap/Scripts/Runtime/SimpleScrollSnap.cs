@@ -225,7 +225,7 @@ namespace DanielLochner.Assets.SimpleScrollSnap
 
             return valid;
         }
-        private void Setup()
+        public void Setup()
         {
             if (NumberOfPanels == 0) return;
 

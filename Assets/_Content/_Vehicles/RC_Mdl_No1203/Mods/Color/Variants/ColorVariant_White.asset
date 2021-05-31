@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: ColorVariant_White
   m_EditorClassIdentifier: 
   Name: 'Color: White'
+  previewPrefab: {fileID: 1407282443881329018, guid: a103bc0aad4fd7c418891780fdca63fe, type: 3}
   color: {r: 1, g: 0.9858491, b: 0.9858491, a: 0}
+  material: {fileID: 0}
+  bodySlot: body

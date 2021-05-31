@@ -21,7 +21,6 @@ public class ColorVariant : ModificationVariant
             else if (color != null)
             {
                 rend.material.color = color;
-                MasterManager.ActiveVehicle.currentColor = color;
             }
 
         }            
