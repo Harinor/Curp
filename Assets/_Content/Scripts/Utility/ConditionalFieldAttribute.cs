@@ -378,7 +378,8 @@ namespace ConditionalInspectorFields.Internal
 		#endregion
 	}
 }
-#endif
+
+
 
 public static class MyBoxExtensions
 {
@@ -471,3 +472,5 @@ public static class MyBoxExtensions
 		return false;
     }
 }
+
+#endif

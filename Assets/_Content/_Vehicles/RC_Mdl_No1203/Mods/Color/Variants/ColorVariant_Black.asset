@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6fe2d4f5b915af4d96240cdf3ad8d05, type: 3}
   m_Name: ColorVariant_Black
   m_EditorClassIdentifier: 
-  Name: 'Color: Black'
+  Name: Black
   previewPrefab: {fileID: 1407282443881329018, guid: 33efbd350dc5b0743b57e5846a790e24, type: 3}
+  previewScale: 1
   color: {r: 0, g: 0, b: 0, a: 0}
   material: {fileID: 2100000, guid: c35c7d5e33766674d8a3e2078892b059, type: 2}
   bodySlot: body

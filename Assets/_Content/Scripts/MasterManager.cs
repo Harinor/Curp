@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MasterManager : MonoBehaviour
 {
     public static MasterManager instance;
+
+    public TextMeshProUGUI console;
 
     private Transform _mainPanel;
     public static Transform MainPanel
@@ -151,5 +154,23 @@ public class MasterManager : MonoBehaviour
         UI_Manager.instance.ToggleInfoPanel();
     }
 
+    public void ToggleSettingsPanel()
+    {
+        UI_Manager.instance.ToggleSettingsPanel();
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    /// <summary>
+    /// X-D
+    /// </summary>
+    /// <param name="input"></param>
+    public static void cout(string input)
+    {
+        instance.console.text += $"\n{input}";
+    }
     #endregion
 }

@@ -203,7 +203,7 @@ public class Selections : MonoBehaviour
         foreach (ModificationVariant variant in currentModSlot.modification.variants)
         {
             var newVariant = Instantiate(slotPrefab);
-            newVariant.GetComponentInChildren<Text>().text = variant.Name;
+            newVariant.GetComponentInChildren<TextMeshProUGUI>().text = Dragoman.Lexicon(variant.Name);
             if (variant.previewPrefab != null)
             {
                 GameObject preview = Instantiate(variant.previewPrefab, newVariant.transform.GetChild(0));
@@ -236,7 +236,7 @@ public class Selections : MonoBehaviour
         {
             Modification mod = modSlot.modification;
             GameObject newMod = Instantiate(slotPrefab);
-            newMod.GetComponentInChildren<Text>().text = mod.Name;
+            newMod.GetComponentInChildren<TextMeshProUGUI>().text = Dragoman.Lexicon(mod.Name);
             scrollSnapModifications.AddToBack(newMod);
             Destroy(newMod);
         }

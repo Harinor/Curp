@@ -26,6 +26,10 @@ public class OrbitalCamera : MonoBehaviour
     {
         UpdateActiveVehicle();
         //UpdateCameraPos();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            sensitivity = 10f;
+        }
     }
 
     private void Update()
@@ -49,12 +53,13 @@ public class OrbitalCamera : MonoBehaviour
 
     #endregion
 
+    #region --- METHODS ---
     private void UpdateCameraPos()
     {
-        if (!IsInValidScreenSection()) return;
-        
-        xRot += ( (!MasterManager.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
-        yRot += ( (!MasterManager.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
+        if (!IsInValidScreenSection() || IsPointerOverUIObject()) return;
+
+        xRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
+        yRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
 
         if (xRot > 90f)
         {
@@ -76,11 +81,11 @@ public class OrbitalCamera : MonoBehaviour
 
         static bool IsInValidScreenSection()
         {
-            if (Input.mousePosition.y < Screen.height / 2.0f && MasterManager.instance.cameraManager.primaryCamera.rect.y != 0) 
+            if (Input.mousePosition.y < Screen.height / 2.0f && MasterManager.instance.cameraManager.primaryCamera.rect.y != 0)
                 return false;
 
             //if (Input.GetTouch(0).position.y < Screen.height / 2.0f) return false;
-            
+
             return true;
         }
     }
@@ -92,4 +97,21 @@ public class OrbitalCamera : MonoBehaviour
     {
         target = MasterManager.ActiveVehicle.transform;
     }
+
+    private bool IsPointerOverUIObject()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return true;
+
+        for (int touchIndex = 0; touchIndex < Input.touchCount; touchIndex++)
+        {
+            Touch touch = Input.GetTouch(touchIndex);
+            if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                return true;
+        }
+
+        return false;
+    } 
+    #endregion
+
 }

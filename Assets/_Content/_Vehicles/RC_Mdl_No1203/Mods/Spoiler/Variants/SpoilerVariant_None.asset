@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 764ce112a6530264ab4141cf1ff5859a, type: 3}
   m_Name: SpoilerVariant_None
   m_EditorClassIdentifier: 
-  Name: no spoiler
+  Name: (none)
   previewPrefab: {fileID: 2725109483987885176, guid: 0e64f9516fcbf0d418d8af9d7ed6ebef, type: 3}
+  previewScale: 1
   spoiler: {fileID: 0}
   spoilerSlot: spoiler_slot
