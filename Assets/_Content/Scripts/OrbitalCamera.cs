@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class OrbitalCamera : MonoBehaviour
 {
-
     public float xRot = 0f;
     public float yRot = 0f;
 
@@ -15,11 +15,14 @@ public class OrbitalCamera : MonoBehaviour
     private bool groundLevelClamp = true;
     public float heightOffset = 0.2f;
 
-    [SerializeField, Tooltip("Time refuired for camera to enter the idle state.")]
+    [SerializeField, Tooltip("Time required for camera to enter the idle state.")]
     float inactivityLimit = 5f;
     float inactivityTimer = 0;
     float xIdleRot = 0;
     float yIdleRot = 0.01f;
+
+    private bool rotationEnabled = true;
+    [SerializeField] Button rotButton;
 
     #region ---UnityCallbacks---
     private void Start()
@@ -29,12 +32,18 @@ public class OrbitalCamera : MonoBehaviour
         if (Application.platform == RuntimePlatform.Android)
         {
             sensitivity = 10f;
+            yIdleRot *= 100;
+        }
+
+        if (rotButton)
+        {
+            rotButton.interactable = (!rotationEnabled);
         }
     }
 
     private void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !IsPointerOverUIObject() && IsInValidScreenSection() && (rotationEnabled || rotButton.gameObject.activeSelf == false) )
         {
             MasterManager.IsIdle = false;
             UpdateCameraPos();
@@ -46,6 +55,7 @@ public class OrbitalCamera : MonoBehaviour
             if (inactivityTimer > inactivityLimit)
             {
                 MasterManager.IsIdle = true;
+                DeactivateCameraInputRotation();
                 UpdateCameraPos();
             }
         }
@@ -56,8 +66,6 @@ public class OrbitalCamera : MonoBehaviour
     #region --- METHODS ---
     private void UpdateCameraPos()
     {
-        if (!IsInValidScreenSection() || IsPointerOverUIObject()) return;
-
         xRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
         yRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
 
@@ -78,16 +86,16 @@ public class OrbitalCamera : MonoBehaviour
         }
 
         transform.LookAt(target.position, Vector3.up);
+    }
 
-        static bool IsInValidScreenSection()
-        {
-            if (Input.mousePosition.y < Screen.height / 2.0f && MasterManager.instance.cameraManager.primaryCamera.rect.y != 0)
-                return false;
+    static bool IsInValidScreenSection()
+    {
+        if (Input.mousePosition.y < Screen.height / 2.0f && MasterManager.instance.cameraManager.primaryCamera.rect.y != 0)
+            return false;
 
-            //if (Input.GetTouch(0).position.y < Screen.height / 2.0f) return false;
+        //if (Input.GetTouch(0).position.y < Screen.height / 2.0f) return false;
 
-            return true;
-        }
+        return true;
     }
 
     /// <summary>
@@ -112,6 +120,25 @@ public class OrbitalCamera : MonoBehaviour
 
         return false;
     } 
+
+    public void ToggleCamera()
+    {
+        rotationEnabled = !rotationEnabled;
+        if (rotButton)
+        {
+            rotButton.interactable = (!rotationEnabled);
+            inactivityTimer = 0;
+        }
+    }
+
+    public void DeactivateCameraInputRotation()
+    {
+        rotationEnabled = false;
+        if (rotButton)
+        {
+            rotButton.interactable = (true);
+        }
+    }
     #endregion
 
 }

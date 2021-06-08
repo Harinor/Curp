@@ -1,4 +1,5 @@
 using DanielLochner.Assets.SimpleScrollSnap;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -84,10 +85,8 @@ public class Selections : MonoBehaviour
         else
         {
             ActiveEnvironment++;
-            //UpdateSelectionMenu();
             StopAllCoroutines();
-            StartCoroutine(TranslateSelections((int)ActiveEnvironment));
-            //Debug.LogError($"SelectionsArrowUp-Selection: {ActiveEnvironment}");            
+            StartCoroutine(TranslateSelections((int)ActiveEnvironment));          
         }
     }
 
@@ -100,10 +99,8 @@ public class Selections : MonoBehaviour
         else
         {
             ActiveEnvironment--;
-            //UpdateSelectionMenu();
             StopAllCoroutines();
             StartCoroutine(TranslateSelections((int)ActiveEnvironment));
-            //Debug.LogError($"SelectionsArrowDown-Selection: {ActiveEnvironment}");
         }
     }
 
@@ -166,6 +163,7 @@ public class Selections : MonoBehaviour
     public void OnModificationPanelChanged() //Modifications
     {
         UpdateSelectionMenu();
+        UpdatePreviewCameras();
         OnModificationPanelChangedCallback.Invoke();
     }
 
@@ -235,13 +233,43 @@ public class Selections : MonoBehaviour
         foreach (Vehicle.ModificationSlot modSlot in MasterManager.ActiveVehicle.modificationSlots)
         {
             Modification mod = modSlot.modification;
-            GameObject newMod = Instantiate(slotPrefab);
-            newMod.GetComponentInChildren<TextMeshProUGUI>().text = Dragoman.Lexicon(mod.Name);
-            scrollSnapModifications.AddToBack(newMod);
-            Destroy(newMod);
+            if (mod != null)
+            {
+                GameObject newMod = Instantiate(slotPrefab);
+                newMod.GetComponentInChildren<TextMeshProUGUI>().text = Dragoman.Lexicon(mod.Name);
+                scrollSnapModifications.AddToBack(newMod);
+                Destroy(newMod);
+            }
         }
 
         UpdateSelectionMenu_Variants();
+    }
+
+    public void UpdateSelections_Vehicles()
+    {
+
+    }
+
+    public void UpdatePreviewCameras()
+    {
+        int activeMod = scrollSnapModifications.CurrentPanel;
+
+        for (int i = 0; i < MasterManager.ActiveVehicle.modificationSlots.Count; i++)
+        {
+            var slot = MasterManager.ActiveVehicle.modificationSlots[i];
+            if (slot != null && slot.previewCamera != null)
+            {
+                if (i == activeMod && CameraManager.instance.selectionState == CameraManager.SelectionState.Displayed 
+                    && ActiveEnvironment != SelectionEnvironment.Vehicles)
+                {
+                    slot.previewCamera.Priority = 100;
+                }
+                else
+                {
+                    slot.previewCamera.Priority = 0;
+                }
+            }
+        }
     }
 
     /// <summary>

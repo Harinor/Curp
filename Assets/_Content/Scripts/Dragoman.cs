@@ -13,10 +13,12 @@ public class Dragoman : MonoBehaviour
     #region --- FIELDS & VARIABLES ---
     public static Dragoman instance;
 
+    Dictionary<string, string> lexicon = new Dictionary<string, string>();
+    string[] stringSeparators = new string[] { stringSeparator };   
     static string stringSeparator = " => ";
-    string[] stringSeparators = new string[] { stringSeparator };
-
+    const string localizationDataPath = "Languages";
     const string defaultLanguage = "English";
+
     public List<string> languages = new List<string>() { defaultLanguage };
 
     private int _currentLanguage = 0;
@@ -36,9 +38,9 @@ public class Dragoman : MonoBehaviour
         }
     }
 
-    Dictionary<string, string> lexicon = new Dictionary<string, string>();
+    [Header("New Localization")]
+    public string fileName;
 
-    const string localizationDataPath = "Languages";
     #endregion
 
 
@@ -68,7 +70,7 @@ public class Dragoman : MonoBehaviour
             Debug.Log("No assets loaded");
         }
 
-        LoadLanguage(2);
+        LoadLanguage(0);
     }
     #endregion
 

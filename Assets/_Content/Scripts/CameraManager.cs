@@ -7,6 +7,7 @@ public class CameraManager : MonoBehaviour
     [Header("Cameras")]
     public Camera primaryCamera;
     public Camera secondaryCamera;
+    public OrbitalCamera orbitalCamera;
 
     [Header("Setting")]
     [SerializeField] float primaryCameraLimitY = 0.5f;
@@ -62,7 +63,8 @@ public class CameraManager : MonoBehaviour
     {
         if (isTransitioning == false)
         {
-            StartCoroutine(AdjustSelectionMenuCoroutine(SelectionState.Hidden, 5f)); 
+            StartCoroutine(AdjustSelectionMenuCoroutine(SelectionState.Hidden, 5f));
+            Selections.instance.UpdatePreviewCameras();
         }
     }
 
@@ -108,5 +110,11 @@ public class CameraManager : MonoBehaviour
         isTransitioning = false;
         //Debug.LogError("Adjustment done!");
     }
+
+    public void ToggleCamera()
+    {
+        orbitalCamera.ToggleCamera();    
+    }
+
     #endregion
 }

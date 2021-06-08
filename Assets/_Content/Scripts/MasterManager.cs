@@ -17,6 +17,7 @@ public class MasterManager : MonoBehaviour
         set { instance._mainPanel = value; }
     }
 
+    public List<Vehicle> availableVehicles = new List<Vehicle>();
 
     [SerializeField] Vehicle activeVehicle;
     public static Vehicle ActiveVehicle
