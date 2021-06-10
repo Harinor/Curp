@@ -30,10 +30,6 @@ public class Selections : MonoBehaviour
     public List<Vehicle> vehicles = new List<Vehicle>();
 
     [Header("Selected slots")]
-    public int Slot0;
-    public int Slot1;
-    public int Slot2;
-
     public SimpleScrollSnap scrollSnapVehicles;
     public SimpleScrollSnap scrollSnapModifications;
     public SimpleScrollSnap scrollSnapVariants;
@@ -55,6 +51,19 @@ public class Selections : MonoBehaviour
     public UnityEvent OnModificationPanelChangedCallback;
     public UnityEvent OnVehiclePanelChangedCallback;
 
+    [Header("Vehicle Arrows")]
+    [SerializeField] GameObject vehicleArrowUp;
+    [SerializeField] GameObject vehicleArrowLeft;
+    [SerializeField] GameObject vehicleArrowRight;
+    [Header("Modification Arrows")]
+    [SerializeField] GameObject modificationArrowUp;
+    [SerializeField] GameObject modificationArrowDown;
+    [SerializeField] GameObject modificationArrowLeft;
+    [SerializeField] GameObject modificationArrowRight;
+    [Header("Variants Arrows")]
+    [SerializeField] GameObject variantsArrowDown;
+    [SerializeField] GameObject variantsArrowLeft;
+    [SerializeField] GameObject variantsArrowRight;
     #endregion
 
     #region --- UNITY CALLBACKS ---
@@ -70,10 +79,9 @@ public class Selections : MonoBehaviour
 
     private void Update()
     {
-        Slot0 = scrollSnapVehicles.CurrentPanel;
-        Slot1 = scrollSnapModifications.CurrentPanel;
-        Slot2 = scrollSnapVariants.CurrentPanel;
-    } 
+        VerifyArrowsVisibility();
+    }
+
     #endregion
 
     public void SelectionsArrowUp()
@@ -86,7 +94,8 @@ public class Selections : MonoBehaviour
         {
             ActiveEnvironment++;
             StopAllCoroutines();
-            StartCoroutine(TranslateSelections((int)ActiveEnvironment));          
+            StartCoroutine(TranslateSelections((int)ActiveEnvironment));
+            UpdatePreviewCameras();
         }
     }
 
@@ -101,6 +110,7 @@ public class Selections : MonoBehaviour
             ActiveEnvironment--;
             StopAllCoroutines();
             StartCoroutine(TranslateSelections((int)ActiveEnvironment));
+            UpdatePreviewCameras();
         }
     }
 
@@ -173,14 +183,22 @@ public class Selections : MonoBehaviour
         OnVehiclePanelChangedCallback.Invoke();
     }
 
-    public void UpdateSelectionMenu(bool forced = false)
+    /// <summary>
+    /// Updates the slections menu.
+    /// </summary>
+    /// <param name="init">Set to TRUE to force vehicles and all rows generation.</param>
+    public void UpdateSelectionMenu(bool init = false)
     {
-        Debug.Log($"UpdateSelectionMenu - ActiveSelection: {ActiveEnvironment}");
-        if (ActiveEnvironment == SelectionEnvironment.Vehicles || forced)
+        if (true)
+        {
+            UpdateSelectionMenu_Vehicles(init);
+        }     
+        
+        if (ActiveEnvironment == SelectionEnvironment.Vehicles || init)
         {
             UpdateSelectionMenu_Modifications();
         }
-        else if (ActiveEnvironment == SelectionEnvironment.Modifications || forced)
+        else if (ActiveEnvironment == SelectionEnvironment.Modifications || init)
         {
             UpdateSelectionMenu_Variants();
         }
@@ -193,6 +211,11 @@ public class Selections : MonoBehaviour
         while (variantsContent.childCount > 0)
         {
             scrollSnapVariants.RemoveFromBack();
+        }
+
+        if (MasterManager.ActiveVehicle.modificationSlots.Count == 0)
+        {
+            return;
         }
 
         var currentModSlot = MasterManager.ActiveVehicle.modificationSlots[scrollSnapModifications.CurrentPanel];
@@ -245,9 +268,38 @@ public class Selections : MonoBehaviour
         UpdateSelectionMenu_Variants();
     }
 
-    public void UpdateSelections_Vehicles()
+    public void UpdateSelectionMenu_Vehicles(bool init = false)
     {
+        if (vehiclesContent.childCount != MasterManager.ActiveVehiclesParent.childCount || init)
+        {
+            while (vehiclesContent.childCount > 0)
+            {
+                scrollSnapVehicles.RemoveFromBack();
+            }
 
+            foreach (Transform child in MasterManager.ActiveVehiclesParent)
+            {
+                GameObject slotObject = Instantiate(slotPrefab);                
+
+                if (child.TryGetComponent(out Vehicle newVehicle) && newVehicle.previewPrefab)
+                {
+                    slotObject.GetComponentInChildren<TextMeshProUGUI>().text = Dragoman.Lexicon(newVehicle.Name);
+                    GameObject preview = Instantiate(newVehicle.previewPrefab, slotObject.transform.GetChild(0));
+                    if (newVehicle.previewScale != 1)
+                    {
+                        preview.transform.localScale = new Vector3(
+                            preview.transform.localScale.x * newVehicle.previewScale,
+                            preview.transform.localScale.y * newVehicle.previewScale,
+                            preview.transform.localScale.z * newVehicle.previewScale);
+                    }
+                    MoveToLayer(preview.transform, 7);
+                }
+
+                scrollSnapVehicles.AddToBack(slotObject);
+                Destroy(slotObject);
+            } 
+        }
+        MasterManager.SetActiveVehicle(scrollSnapVehicles.CurrentPanel);
     }
 
     public void UpdatePreviewCameras()
@@ -269,6 +321,85 @@ public class Selections : MonoBehaviour
                     slot.previewCamera.Priority = 0;
                 }
             }
+        }
+    }
+
+    private void VerifyArrowsVisibility()
+    {
+        if (modificationsContent.childCount == 0)
+        {
+            vehicleArrowUp.SetActive(false);
+            modificationArrowLeft.SetActive(false);
+            modificationArrowRight.SetActive(false);          
+            modificationArrowUp.SetActive(false);          
+            modificationArrowDown.SetActive(false);          
+        }
+        else
+        {
+            vehicleArrowUp.SetActive(true);
+
+            if (scrollSnapModifications.CurrentPanel == 0)
+            {
+                modificationArrowLeft.SetActive(false);
+            }
+            else
+            {
+                modificationArrowLeft.SetActive(true);
+            }
+            if (scrollSnapModifications.CurrentPanel == scrollSnapModifications.Panels.Length - 1)
+            {
+                modificationArrowRight.SetActive(false);
+            }
+            else
+            {
+                modificationArrowRight.SetActive(true);
+            }
+            modificationArrowUp.SetActive(true);
+            modificationArrowDown.SetActive(true);
+        }
+
+        if (variantsContent.childCount == 0 || modificationsContent.childCount == 0)
+        {
+            variantsArrowDown.SetActive(false);
+            variantsArrowLeft.SetActive(false);
+            variantsArrowRight.SetActive(false);
+        }
+        else
+        {
+            variantsArrowDown.SetActive(true);
+            if (scrollSnapVariants.CurrentPanel == 0)
+            {
+                variantsArrowLeft.SetActive(false);
+            }
+            else
+            {
+                variantsArrowLeft.SetActive(true);
+            }
+            if (scrollSnapVariants.CurrentPanel == scrollSnapVariants.Panels.Length - 1)
+            {
+                variantsArrowRight.SetActive(false);
+            }
+            else
+            {
+                variantsArrowRight.SetActive(true);
+            }
+        }
+
+        if (scrollSnapVehicles.CurrentPanel == 0)
+        {
+            vehicleArrowLeft.SetActive(false);
+        }
+        else
+        {
+            vehicleArrowLeft.SetActive(true);
+        }
+        if (scrollSnapVehicles.CurrentPanel == scrollSnapVehicles.Panels.Length - 1)
+        {
+            vehicleArrowRight.SetActive(false);
+        }
+        else
+        {
+            vehicleArrowRight.SetActive(true);
         }
     }
 

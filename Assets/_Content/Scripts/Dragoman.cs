@@ -6,7 +6,7 @@ using UnityEngine;
 
 /// <summary>
 /// "Dragoman - an interpreter or guide, especially in countries speaking Arabic, Turkish, or Persian." - Google Translate;
-/// Now Dragoman translates the assets of this project. XD
+/// Now Dragoman provides translation resources for the assets of this project. XD
 /// </summary>
 public class Dragoman : MonoBehaviour
 {
@@ -17,9 +17,12 @@ public class Dragoman : MonoBehaviour
     string[] stringSeparators = new string[] { stringSeparator };   
     static string stringSeparator = " => ";
     const string localizationDataPath = "Languages";
+    public static string LocalizationDataPath => localizationDataPath;
+
     const string defaultLanguage = "English";
 
-    public List<string> languages = new List<string>() { defaultLanguage };
+    List<string> languages = new List<string>() { defaultLanguage };
+    public static List<string> Languages => instance.languages;
 
     private int _currentLanguage = 0;
     public int CurrentLanguage
@@ -62,7 +65,6 @@ public class Dragoman : MonoBehaviour
             foreach (var asset in loadedAssets)
             {
                 languages.Add(asset.name);
-                Debug.LogError(asset.name);
             }
         }
         else
@@ -84,10 +86,15 @@ public class Dragoman : MonoBehaviour
         return key;
     }
 
-    public void UpdateDragons()
+    public void CreateNewLocalizationFile()
     {
-        string path = Path.Combine(Application.dataPath, "Resources", "Template.txt");
+        string path = Path.Combine(Application.dataPath, "Resources", localizationDataPath, $"{fileName}.txt");
 
+        if (File.Exists(path))
+        {
+            Debug.LogWarning($"'{fileName}.txt' already exists!");
+            return;
+        }
 
         using (StreamWriter sw = new StreamWriter(path))
         {
@@ -116,29 +123,6 @@ public class Dragoman : MonoBehaviour
                 sw.WriteLine(line + stringSeparator);
             }
         }
-    }
-
-    public void OutputDragons()
-    {
-        string path = Path.Combine(Application.dataPath, "Resources", "Template.txt");
-
-        if (!File.Exists(path)) return;
-
-        using (StreamReader sr = File.OpenText(path))
-        {
-            string s = "";
-            while ((s = sr.ReadLine()) != null)
-            {
-                Debug.Log(s);
-            }
-        }
-    }
-
-    internal void ToggleLanguage()
-    {
-        CurrentLanguage++;
-        LoadLanguage(CurrentLanguage);
-        Debug.Log($"Changing language to {languages[CurrentLanguage]}");
     }
 
     private void ProcessLanguage(string content)

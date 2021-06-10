@@ -2355,6 +2355,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Racing Car 1203
+  previewPrefab: {fileID: 1605849382777707974, guid: 119e690270e0a0f47a48800038a9e586, type: 3}
+  previewScale: 1
+  lights: {fileID: 222601109314075350}
   modificationSlots:
   - modTitle: Color
     modification: {fileID: 11400000, guid: 85265671e88ceee46939b8fdfbb1cb19, type: 2}
@@ -2372,7 +2375,31 @@ MonoBehaviour:
     modification: {fileID: 11400000, guid: e09fd3043b4cebf4fb2f9eb4d7007f38, type: 2}
     activeVariant: 0
     previewCamera: {fileID: 7624645376098806515}
-  lights: {fileID: 222601109314075350}
+  information:
+    description: '2015 Honda CR-V EX-L
+
+      Odometer - 52,315 miles
+
+      Fuel
+      Economy - 27.0/34.0 mpg City/Hwy
+
+      Exterior Color - Alabaster Silver Metallic
+
+      Interior
+      Color - Gray
+
+      Body - SUV
+
+      Seating - 5 seats
+
+      Transmission
+      - Continuously Variable Automatic
+
+      Drivetrain - Front-wheel
+
+      Engine
+      - 2.4L I-4 cylinder'
+    price: 999
 --- !u!1 &6873551574370425153
 GameObject:
   m_ObjectHideFlags: 0
@@ -2496,6 +2523,7 @@ GameObject:
   - component: {fileID: 6879112418346677815}
   - component: {fileID: 6850682425538657425}
   - component: {fileID: 6860104163600116853}
+  - component: {fileID: 1602125617940891197}
   m_Layer: 0
   m_Name: body
   m_TagString: Untagged
@@ -2566,6 +2594,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1602125617940891197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6873873930929604951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 021bd99a9fa291444a17736606dcf16e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7746704611347139317
 GameObject:
   m_ObjectHideFlags: 0

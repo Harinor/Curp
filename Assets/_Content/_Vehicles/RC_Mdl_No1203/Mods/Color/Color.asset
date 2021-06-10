@@ -15,5 +15,12 @@ MonoBehaviour:
   Name: Color
   variants:
   - {fileID: 11400000, guid: 50d1688e41f84d44fada827b09b62ea0, type: 2}
+  - {fileID: 11400000, guid: dafd05542eef9ea49ae3b760a559bcfc, type: 2}
+  - {fileID: 11400000, guid: fab7574676469674e8c3726d00e1694c, type: 2}
   - {fileID: 11400000, guid: 50d19b0b45a12fe4d97414845b852b4b, type: 2}
+  - {fileID: 11400000, guid: fbae0eebe00ecd74198a92126a20dd18, type: 2}
+  - {fileID: 11400000, guid: 7088caae2489ad84980f77f7e4a2033c, type: 2}
   - {fileID: 11400000, guid: 732a840b3a87f6542b75f2d03203df4f, type: 2}
+  - {fileID: 11400000, guid: 21ae74cd97c18ca4ba730fcfbeb82318, type: 2}
+  - {fileID: 11400000, guid: 931767249a9dc054bb231511bb00e1d7, type: 2}
+  - {fileID: 11400000, guid: 4b50ba6377cef8a45950dc82f195e9d5, type: 2}

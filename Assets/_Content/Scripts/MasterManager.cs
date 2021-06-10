@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,9 +18,15 @@ public class MasterManager : MonoBehaviour
         set { instance._mainPanel = value; }
     }
 
-    public List<Vehicle> availableVehicles = new List<Vehicle>();
+    [Tooltip("The parent transform for instantiated vehicles.")]
+    [SerializeField] Transform activeVehiclesParent;
+    public static Transform ActiveVehiclesParent => instance.activeVehiclesParent;
 
-    [SerializeField] Vehicle activeVehicle;
+    [Tooltip("These prefabs are instantiated at start up to be viewed by the primary camera.")]
+    [SerializeField] List<GameObject> availableVehicles = new List<GameObject>();
+    public static List<GameObject> AvailableVehicles => instance.availableVehicles;
+
+    Vehicle activeVehicle;
     public static Vehicle ActiveVehicle
     {
         get { return instance.activeVehicle; }
@@ -38,17 +45,10 @@ public class MasterManager : MonoBehaviour
 
     public GameObject defaultDirectionalLight;
 
-    /// <summary>
-    /// Determines which UI scene to load. The scene name must match the corresponding enum option exactly.
-    /// </summary>
-    enum UiScenes 
-    {
-        None,
-        UI_Scene_Prototype,
-    }
-    [Header("UI")]
-    [SerializeField] UiScenes uiScene = UiScenes.UI_Scene_Prototype;
-    bool hasLoadedUI = false;
+    #region --- EVENTS ---
+    public delegate void OnActiveVehicleMaterialChangedEvent();
+    public event OnActiveVehicleMaterialChangedEvent OnActiveVehicleMaterialChanged;
+    #endregion
 
     #region --- UNITY CALLBACKS ---
     private void Awake()
@@ -57,19 +57,14 @@ public class MasterManager : MonoBehaviour
         {
             instance = this;
         }
-        if (activeVehicle == null)
-        {
-            activeVehicle = FindObjectOfType<Vehicle>();
-        }
+        InitializeVehicles();
     }
 
     private void Start()
     {
         cameraManager = GetComponent<CameraManager>();
-        LoadUI();
-        //TODO: replace temporary
-        //SceneManager.LoadScene("ModSelectionScene", LoadSceneMode.Additive);
-        Debug.LogWarning($"{Screen.width}:{Screen.height}");
+        Debug.Log($"{Screen.width}:{Screen.height}");
+        StartCoroutine(PostStart());
     }
 
     private void Update()
@@ -79,39 +74,41 @@ public class MasterManager : MonoBehaviour
     #endregion
 
     #region --- METHODS ---
-    private void LoadUI()
+    IEnumerator PostStart()
     {
-        if (uiScene != UiScenes.None)
-        {
-            string output = uiScene.ToString();
-            Debug.Log($"Loading {output}...");
-            SceneManager.LoadScene(output, LoadSceneMode.Additive);
-        }
-
-        hasLoadedUI = true;
+        yield return new WaitForEndOfFrame();
+        SetActiveVehicle();
     }
 
-    private void UnloadUI()
+    private void InitializeVehicles()
     {
-        string output = uiScene.ToString();
-        SceneManager.UnloadSceneAsync(output);
-        hasLoadedUI = false;
+        if (ActiveVehiclesParent == null)
+        {
+            activeVehiclesParent = GameObject.Find("ActiveVehiclesParent").transform;
+        }
+
+        foreach (Transform child in ActiveVehiclesParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < availableVehicles.Count; i++)
+        {
+            var newVehicle = Instantiate(availableVehicles[i], ActiveVehiclesParent);
+            if (i == 0)
+            {
+                newVehicle.SetActive(true);
+                ActiveVehicle = newVehicle.GetComponent<Vehicle>();
+            }
+            else
+            {
+                newVehicle.SetActive(false);
+            }
+        }
     }
 
     private void ProcessInput()
     {
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            if (hasLoadedUI)
-            {
-                UnloadUI();
-            }
-            else
-            {
-                LoadUI();
-            }
-        }
-
         if (Input.GetKeyDown(KeyCode.KeypadMinus))
         {
             cameraManager.HideSelectionMenu();
@@ -124,6 +121,23 @@ public class MasterManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             Selections.instance.UpdateSelectionMenu();
+        }
+    }
+
+    public static void SetActiveVehicle(int index = 0)
+    {
+        for (int i = 0; i < ActiveVehiclesParent.childCount; i++)
+        {
+            if (i == index)
+            {
+                GameObject newActiveVehicle = ActiveVehiclesParent.GetChild(i).gameObject;
+                newActiveVehicle.SetActive(true);
+                ActiveVehicle = newActiveVehicle.GetComponent<Vehicle>();
+            }
+            else
+            {
+                ActiveVehiclesParent.GetChild(i).gameObject.SetActive(false);
+            }
         }
     }
 
@@ -162,7 +176,13 @@ public class MasterManager : MonoBehaviour
 
     public void Quit()
     {
-        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WEBPLAYER
+         Application.OpenURL(webplayerQuitURL);
+#else
+         Application.Quit();
+#endif
     }
 
     /// <summary>
@@ -173,5 +193,11 @@ public class MasterManager : MonoBehaviour
     {
         instance.console.text += $"\n{input}";
     }
+
+    public void TriggerOnActiveVehicleMaterialChangedEvent()
+    {
+        OnActiveVehicleMaterialChanged?.Invoke();
+    }
+
     #endregion
 }

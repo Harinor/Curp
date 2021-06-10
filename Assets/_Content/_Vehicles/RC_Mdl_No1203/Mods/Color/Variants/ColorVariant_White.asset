@@ -16,5 +16,5 @@ MonoBehaviour:
   previewPrefab: {fileID: 1407282443881329018, guid: a103bc0aad4fd7c418891780fdca63fe, type: 3}
   previewScale: 1
   color: {r: 1, g: 0.9858491, b: 0.9858491, a: 0}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: f4fec313c54858345b378310d32946d0, type: 2}
   bodySlot: body

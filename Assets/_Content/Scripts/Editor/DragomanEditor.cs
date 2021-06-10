@@ -8,8 +8,8 @@ using UnityEngine;
 public class DragomanEditor : Editor
 {
     GUIContent updateDragonButton = new GUIContent(
-        "Update dragons", 
-        "Updates all localizeable text.");
+        "Create a new localization file",
+        "Create a new localization file. With the name supplied above.");
 
     public override void OnInspectorGUI()
     {
@@ -21,7 +21,7 @@ public class DragomanEditor : Editor
 
         if (GUILayout.Button(updateDragonButton))
         {
-            myScript.UpdateDragons();
+            myScript.CreateNewLocalizationFile();
         }
   
     }

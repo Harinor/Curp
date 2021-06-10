@@ -9,7 +9,7 @@ public class OrbitalCamera : MonoBehaviour
 
     public float distance = 5f;
     public float sensitivity = 1000f;
-    Transform target;
+    [SerializeField] Transform target;
 
     [SerializeField, Tooltip("Prevents camera from going below the ground level.")]
     private bool groundLevelClamp = true;
@@ -27,11 +27,9 @@ public class OrbitalCamera : MonoBehaviour
     #region ---UnityCallbacks---
     private void Start()
     {
-        UpdateActiveVehicle();
-        //UpdateCameraPos();
-        if (Application.platform == RuntimePlatform.Android)
+        if (IsTouchScreen())
         {
-            sensitivity = 10f;
+            sensitivity = 5f;
             yIdleRot *= 100;
         }
 
@@ -43,31 +41,49 @@ public class OrbitalCamera : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !IsPointerOverUIObject() && IsInValidScreenSection() && (rotationEnabled || rotButton.gameObject.activeSelf == false) )
+        if (Input.GetMouseButton(0) && !IsPointerOverUIObject() && IsInValidScreenSection() && (rotationEnabled || rotButton.gameObject.activeSelf == false))
         {
-            MasterManager.IsIdle = false;
-            UpdateCameraPos();
-            inactivityTimer = 0;
+            ProcessInputActive();
         }
         else
         {
-            inactivityTimer += Time.deltaTime;
-            if (inactivityTimer > inactivityLimit)
-            {
-                MasterManager.IsIdle = true;
-                DeactivateCameraInputRotation();
-                UpdateCameraPos();
-            }
-        }
+            ProcessInputIdle();
+        } 
     }
 
+    private void ProcessInputActive()
+    {
+        MasterManager.IsIdle = false;
+        UpdateCameraPos();
+        inactivityTimer = 0;
+    }
+    
+    private void ProcessInputIdle()
+    {
+        inactivityTimer += Time.deltaTime;
+        if (inactivityTimer > inactivityLimit)
+        {
+            MasterManager.IsIdle = true;
+            DeactivateCameraInputRotation();
+            UpdateCameraPos();
+        }
+    }
     #endregion
 
     #region --- METHODS ---
     private void UpdateCameraPos()
     {
-        xRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
-        yRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
+        if (IsTouchScreen())
+        {
+            xRot += ((!MasterManager.IsIdle) ? Input.GetTouch(0).deltaPosition.y : xIdleRot) * sensitivity * Time.deltaTime;
+            yRot += ((!MasterManager.IsIdle) ? Input.GetTouch(0).deltaPosition.x : yIdleRot) * sensitivity * Time.deltaTime;
+        }
+        else
+        {
+            xRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse Y") : xIdleRot) * sensitivity * Time.deltaTime;
+            yRot += ((!MasterManager.IsIdle) ? Input.GetAxis("Mouse X") : yIdleRot) * sensitivity * Time.deltaTime;
+        }
+
 
         if (xRot > 90f)
         {
@@ -96,14 +112,6 @@ public class OrbitalCamera : MonoBehaviour
         //if (Input.GetTouch(0).position.y < Screen.height / 2.0f) return false;
 
         return true;
-    }
-
-    /// <summary>
-    /// Sets the camera's target to the Active Vehicle. Callback from the Selections script.
-    /// </summary>
-    public void UpdateActiveVehicle()
-    {
-        target = MasterManager.ActiveVehicle.transform;
     }
 
     private bool IsPointerOverUIObject()
@@ -138,6 +146,15 @@ public class OrbitalCamera : MonoBehaviour
         {
             rotButton.interactable = (true);
         }
+    }
+
+    private bool IsTouchScreen()
+    {
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            return true;
+        }
+        return false;
     }
     #endregion
 

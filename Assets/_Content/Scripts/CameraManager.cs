@@ -91,11 +91,14 @@ public class CameraManager : MonoBehaviour
                 break;
         }
 
+        //float timeElapsed = 0;
+        float transitionStartedTime = Time.unscaledTime;
         float timeElapsed = 0;
 
         while (primaryCamera.rect.y != targetPrimaryPosY && timeElapsed < transitionTimeLimit)
         {
-            timeElapsed += Time.deltaTime;
+            //timeElapsed += Time.time;
+            timeElapsed = Time.unscaledTime - transitionStartedTime;
             float newPrimaryCameraPosY = Mathf.Lerp(primaryCamera.rect.y, targetPrimaryPosY, Time.deltaTime * (transitionSpeed + timeElapsed));
             float newSecondaryCameraPosY = Mathf.Lerp(secondaryCamera.rect.y, targetSecondaryPosY, Time.deltaTime * (transitionSpeed + timeElapsed));
 

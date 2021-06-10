@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6fe2d4f5b915af4d96240cdf3ad8d05, type: 3}
-  m_Name: ColorVariant_Red
+  m_Name: ColorVariant_Yellow
   m_EditorClassIdentifier: 
-  Name: Metallic Red
-  previewPrefab: {fileID: 1407282443881329018, guid: 8e9f656d5c1afd2489c0cabd103c2d84, type: 3}
-  color: {r: 0.7075472, g: 0.18356179, b: 0.18356179, a: 0}
-  material: {fileID: 2100000, guid: 56c6f066d45181c438437df9828d379a, type: 2}
+  Name: Yellow
+  previewPrefab: {fileID: 1407282443881329018, guid: c1062d2101d7163419cf654b121ad086, type: 3}
+  previewScale: 1
+  color: {r: 1, g: 0.9858491, b: 0.9858491, a: 0}
+  material: {fileID: 2100000, guid: ef3b15cf9bd765c4788cfc731869c25e, type: 2}
   bodySlot: body

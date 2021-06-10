@@ -8,6 +8,9 @@ public class SpoilerVariant : ModificationVariant
     [SerializeField] GameObject spoiler;
     [SerializeField] string spoilerSlot;
 
+    [SerializeField, Tooltip("Whether the color should match the color of the body.")]
+    bool syncBodyColor = false;
+
     public override void Apply()
     {
         base.Apply();
@@ -19,6 +22,11 @@ public class SpoilerVariant : ModificationVariant
         if (spoiler)
         {
             Instantiate(spoiler, slot);
+            if (spoiler != null && syncBodyColor && !spoiler.TryGetComponent(out MaterialSynchronizer _))
+            {
+                spoiler.AddComponent<MaterialSynchronizer>();
+                MasterManager.ActiveVehicle.UpdateVehicleMaterial();
+            }
         }        
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 using System;
 
 public class UI_Manager : MonoBehaviour
@@ -10,6 +11,11 @@ public class UI_Manager : MonoBehaviour
     public GameObject settingsPanel;
     public TMP_Dropdown dropdown;
     public GameObject mainCanvas;
+
+    [Header("Information")]
+    [SerializeField] TextMeshProUGUI infoHeader;
+    [SerializeField] TextMeshProUGUI infoText;
+    [SerializeField] TextMeshProUGUI infoPrize;
 
     public static UI_Manager instance;
 
@@ -37,8 +43,20 @@ public class UI_Manager : MonoBehaviour
         {
             dropdown = GetComponentInChildren<TMP_Dropdown>();
         }
+ 
         dropdown.ClearOptions();
-        dropdown.AddOptions(Dragoman.instance.languages);
+
+        List<TMP_Dropdown.OptionData> dropdownList = new List<TMP_Dropdown.OptionData>();
+        var loadedSprites = Resources.LoadAll<Sprite>(Dragoman.LocalizationDataPath);
+        List<Sprite> loadedSpritesList = loadedSprites.OfType<Sprite>().ToList();
+
+        foreach (string language in Dragoman.Languages)
+        {
+            Sprite sprite = loadedSpritesList.FirstOrDefault(x => x.name == language);
+            dropdownList.Add(new TMP_Dropdown.OptionData(language, sprite));
+        }
+
+        dropdown.AddOptions(dropdownList);
     }
 
     public void ToggleInfoPanel()
@@ -53,6 +71,7 @@ public class UI_Manager : MonoBehaviour
             else
             {
                 infoPanel.SetActive(true);
+                UpdateInfoPanel();
                 mainCanvas.SetActive(false);
                 if (CameraManager.instance.selectionState == CameraManager.SelectionState.Displayed)
                 {
@@ -62,6 +81,13 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
+    private void UpdateInfoPanel()
+    {
+        infoHeader.text = MasterManager.ActiveVehicle.Name;
+        infoText.text = MasterManager.ActiveVehicle.information.description;
+        infoPrize.text = "$" + MasterManager.ActiveVehicle.information.price.ToString();
+    }
+
     public void ToggleSettingsPanel()
     {
         if (settingsPanel != null)
@@ -69,6 +95,7 @@ public class UI_Manager : MonoBehaviour
             if (settingsPanel.activeSelf)
             {
                 settingsPanel.SetActive(false);
+                Time.timeScale = 1f;
             }
             else
             {
@@ -77,13 +104,13 @@ public class UI_Manager : MonoBehaviour
                 {
                     CameraManager.instance.HideSelectionMenu();
                 }
+                Time.timeScale = 0;
             }
         }
     }
 
     public void ChangeLanguage(int index)
     {
-        //Debug.Log("Dropdown" + index);
         Dragoman.instance.LoadLanguage(index);
     }
 

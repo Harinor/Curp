@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 764ce112a6530264ab4141cf1ff5859a, type: 3}
-  m_Name: SpoilerVariant_1
+  m_Name: SpoilerVariant_3_Painted
   m_EditorClassIdentifier: 
-  Name: 'Spoiler 1: Aluminium'
-  previewPrefab: {fileID: 5118911368796202686, guid: a21ea8d9d916cd448881698235ca9b19, type: 3}
+  Name: 'Spoiler 3: Painted'
+  previewPrefab: {fileID: 8049013810964705725, guid: 42fa7eaf93ec029418592d8ecffaee7f, type: 3}
   previewScale: 0.5
-  spoiler: {fileID: 5118911368796202686, guid: a21ea8d9d916cd448881698235ca9b19, type: 3}
+  spoiler: {fileID: 8049013810964705725, guid: 42fa7eaf93ec029418592d8ecffaee7f, type: 3}
   spoilerSlot: spoiler_slot
+  syncBodyColor: 1
