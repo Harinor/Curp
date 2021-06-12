@@ -23,17 +23,17 @@ public class Vehicle : MonoBehaviour
     [Tooltip("The provided information.")]
     public Information information;
 
-    private Material bodyMatrial;
+    private Material bodyMaterial;
 
     /// <summary>
     /// Holds the main material of the vehicle. Changing the value calls synchronize method for modification that should share the material.
     /// </summary>
     public Material BodyMaterial
     {
-        get { return bodyMatrial; }
+        get { return bodyMaterial; }
         set 
         { 
-            bodyMatrial = value; 
+            bodyMaterial = value; 
             UpdateVehicleMaterial();
             MasterManager.instance.TriggerOnActiveVehicleMaterialChangedEvent();
         }
@@ -63,12 +63,24 @@ public class Vehicle : MonoBehaviour
     [System.Serializable]
     public class Information
     {
+        public float price = 0;       
         /// <summary>
         /// Mainly for the inspector.
         /// </summary>
         [TextArea(3, 20)]
         public string description;
-        public float price = 0;
+        public List<Specification> specifications;
+
+        static readonly string stringSeparator = ":\t";
+        [HideInInspector] public string[] stringSeparators = new string[] { stringSeparator };
+
+        [System.Serializable]
+        public class Specification
+        {
+            public string name;
+            public string value;
+            public string unit;
+        }
     } 
     #endregion
 }

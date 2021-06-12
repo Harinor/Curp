@@ -15,6 +15,9 @@ public class OrbitalCamera : MonoBehaviour
     private bool groundLevelClamp = true;
     public float heightOffset = 0.2f;
 
+    [SerializeField, Tooltip("Enables automnatic idle mode.")]
+    private bool isIdleAllowed = true;
+
     [SerializeField, Tooltip("Time required for camera to enter the idle state.")]
     float inactivityLimit = 5f;
     float inactivityTimer = 0;
@@ -61,7 +64,7 @@ public class OrbitalCamera : MonoBehaviour
     private void ProcessInputIdle()
     {
         inactivityTimer += Time.deltaTime;
-        if (inactivityTimer > inactivityLimit)
+        if (inactivityTimer > inactivityLimit && isIdleAllowed)
         {
             MasterManager.IsIdle = true;
             DeactivateCameraInputRotation();
@@ -155,6 +158,20 @@ public class OrbitalCamera : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void SetGroundLevelClamp(bool value)
+    {
+        groundLevelClamp = value;
+    }
+
+    public void SetIsIdleAllowed(bool value)
+    {
+        isIdleAllowed = value;
+        if (value == false)
+        {
+            MasterManager.IsIdle = false;
+        }
     }
     #endregion
 

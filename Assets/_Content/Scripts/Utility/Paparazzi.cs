@@ -12,7 +12,6 @@ public class Paparazzi : MonoBehaviour
     [SerializeField] Camera theCamera;
 
     bool isStalking;
-    int counter = 1;
 
     #region --- UNITY CALLBACKS ---
     private void Start()
@@ -45,23 +44,21 @@ public class Paparazzi : MonoBehaviour
         Rect rect = new Rect(0, 0, renderTexture.width, renderTexture.height);
         renderResult.ReadPixels(rect, 0, 0);
 
-        string filename = $"take_{counter}.png";
+        string filename = $"Curp_{DateTime.Now:yyyyMMddHHmmss}.png";
         string path = Path.Combine(Application.dataPath/*, "screenshots"*/, filename);
 
         if (Application.platform == RuntimePlatform.Android)
         {
-            SaveImageToGallery(renderResult, filename, $"A file called {filename}.");
-            MasterManager.cout("Android: ProcessTakingScreenshot()");
+            //SaveImageToGallery(renderResult, filename, $"A file called {filename}.");
+            //MasterManager.cout("Android: ProcessTakingScreenshot()");
             NativeToolkit.SaveImage(renderResult, filename+"img", "png");
-            NativeToolkit.SaveScreenshot(filename+"scr", "Curp", "jpg", rect);
+            //NativeToolkit.SaveScreenshot(filename+"scr", "Curp", "jpg", rect);
         }
         else
         {
             byte[] byteArray = renderResult.EncodeToPNG();
             File.WriteAllBytes(path, byteArray);
         }
-
-        counter++;
 
         RenderTexture.ReleaseTemporary(renderTexture);
         theCamera.targetTexture = null;

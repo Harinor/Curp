@@ -211,7 +211,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 119
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -304,7 +304,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 119
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -2376,30 +2376,32 @@ MonoBehaviour:
     activeVariant: 0
     previewCamera: {fileID: 7624645376098806515}
   information:
-    description: '2015 Honda CR-V EX-L
-
-      Odometer - 52,315 miles
-
-      Fuel
-      Economy - 27.0/34.0 mpg City/Hwy
-
-      Exterior Color - Alabaster Silver Metallic
-
-      Interior
-      Color - Gray
-
-      Body - SUV
-
-      Seating - 5 seats
-
-      Transmission
-      - Continuously Variable Automatic
-
-      Drivetrain - Front-wheel
-
-      Engine
-      - 2.4L I-4 cylinder'
     price: 999
+    description: Modern and elegant vehicle for the discerning driver!
+    specifications:
+    - name: Odometer
+      value: '52,315 '
+      unit: miles
+    - name: Fuel Economy
+      value: 27.0/34.0
+      unit: mpg City/Hwy
+    - name: Interior Color
+      value: Gray
+      unit: 
+    - name: 'Body '
+      value: SUV
+      unit: 
+    - name: Seating
+      value: 5
+      unit: seats
+    - name: Transmission
+      value: Continuously Variable Automatic
+      unit: 
+    - name: Engine
+      value: 2.4L I-4 cylinder
+      unit: 
+    stringSeparators:
+    - ":\t"
 --- !u!1 &6873551574370425153
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,6 +2608,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021bd99a9fa291444a17736606dcf16e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  remote: 1
+  renderers: []
 --- !u!1 &7746704611347139317
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,13 +9,17 @@ public class UI_Manager : MonoBehaviour
 {
     public GameObject infoPanel;
     public GameObject settingsPanel;
+    public GameObject helpPanel;
+    public GameObject helpButton;
     public TMP_Dropdown dropdown;
+    public TMP_Dropdown dropdownEnvironment;
     public GameObject mainCanvas;
 
     [Header("Information")]
     [SerializeField] TextMeshProUGUI infoHeader;
     [SerializeField] TextMeshProUGUI infoText;
     [SerializeField] TextMeshProUGUI infoPrize;
+
 
     public static UI_Manager instance;
 
@@ -31,19 +35,15 @@ public class UI_Manager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        SetUp();
+        SetUpLanguageDropdown();
+        SetUpEnvironmentDropdown();
     }
 
     #endregion
 
     #region --- METHODS ---
-    public void SetUp()
+    public void SetUpLanguageDropdown()
     {
-        if (dropdown == null && settingsPanel != null)
-        {
-            dropdown = GetComponentInChildren<TMP_Dropdown>();
-        }
- 
         dropdown.ClearOptions();
 
         List<TMP_Dropdown.OptionData> dropdownList = new List<TMP_Dropdown.OptionData>();
@@ -57,6 +57,20 @@ public class UI_Manager : MonoBehaviour
         }
 
         dropdown.AddOptions(dropdownList);
+    }
+
+    public void SetUpEnvironmentDropdown()
+    {
+        dropdownEnvironment.ClearOptions();
+
+        List<TMP_Dropdown.OptionData> dropdownList = new List<TMP_Dropdown.OptionData>();
+
+        dropdownList.Add(new TMP_Dropdown.OptionData(string.Empty, EnvironmentManager.instance.none));
+        dropdownList.Add(new TMP_Dropdown.OptionData(string.Empty, EnvironmentManager.instance.city));
+        dropdownList.Add(new TMP_Dropdown.OptionData(string.Empty, EnvironmentManager.instance.nature));
+        dropdown.value = 1;
+
+        dropdownEnvironment.AddOptions(dropdownList);
     }
 
     public void ToggleInfoPanel()
@@ -83,9 +97,41 @@ public class UI_Manager : MonoBehaviour
 
     private void UpdateInfoPanel()
     {
-        infoHeader.text = MasterManager.ActiveVehicle.Name;
-        infoText.text = MasterManager.ActiveVehicle.information.description;
+        infoHeader.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.Name);
+        infoText.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.information.description);
+        infoText.text += "\n";
+        foreach (Vehicle.Information.Specification spec in MasterManager.ActiveVehicle.information.specifications)
+        {
+            string nextLine = "\n" 
+                + Dragoman.Lexicon(spec.name) + ": "
+                + Dragoman.Lexicon(spec.value) + " " 
+                + (String.IsNullOrEmpty(spec.unit) ? string.Empty : Dragoman.Lexicon(spec.unit));
+            infoText.text += nextLine;
+        }
+
         infoPrize.text = "$" + MasterManager.ActiveVehicle.information.price.ToString();
+    }
+
+    public void ToggleHelpPanel()
+    {
+        if (helpPanel != null)
+        {
+            if (helpPanel.activeSelf)
+            {
+                helpPanel.SetActive(false);
+                mainCanvas.SetActive(true);
+            }
+            else
+            {
+                helpPanel.SetActive(true);
+                UpdateInfoPanel();
+                mainCanvas.SetActive(false);
+                if (CameraManager.instance.selectionState == CameraManager.SelectionState.Displayed)
+                {
+                    CameraManager.instance.HideSelectionMenu();
+                }
+            }
+        }
     }
 
     public void ToggleSettingsPanel()
@@ -112,6 +158,11 @@ public class UI_Manager : MonoBehaviour
     public void ChangeLanguage(int index)
     {
         Dragoman.instance.LoadLanguage(index);
+    }
+
+    internal void ToggleHelpButton(bool value)
+    {
+        helpButton.SetActive(value);
     }
 
 

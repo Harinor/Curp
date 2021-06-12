@@ -7,9 +7,12 @@ using UnityEngine;
 [CustomEditor(typeof(Dragoman))]
 public class DragomanEditor : Editor
 {
-    GUIContent updateDragonButton = new GUIContent(
+    readonly GUIContent updateDragonButton = new GUIContent(
         "Create a new localization file",
         "Create a new localization file. With the name supplied above.");
+    readonly GUIContent generateTMProButton = new GUIContent(
+    "Generate Text UI sources",
+    "Generate base and TMPro UI localization sources.");
 
     public override void OnInspectorGUI()
     {
@@ -23,6 +26,10 @@ public class DragomanEditor : Editor
         {
             myScript.CreateNewLocalizationFile();
         }
-  
+
+        if (GUILayout.Button(generateTMProButton))
+        {
+            myScript.GenerateTMProLocalizationComponents();
+        }
     }
 }

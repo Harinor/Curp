@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3161544300848140040}
   - component: {fileID: 1240075744955910240}
   - component: {fileID: 5411380483321777412}
+  - component: {fileID: -4998640766907021774}
   m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -65,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Sv\u011Brac\xED"
+  m_text: "Uk\xE1zka"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d90c185da6ec4e64fbf6457e0fb1d5e6, type: 2}
   m_sharedMaterial: {fileID: 4784682023909185566, guid: d90c185da6ec4e64fbf6457e0fb1d5e6, type: 2}
@@ -134,6 +135,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &-4998640766907021774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433966682965321863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781bcc3fe4f039a4699dbd48683761f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableForThisObject: 1
+  text: {fileID: 0}
+  textMeshProUGUI: {fileID: 5411380483321777412}
+  lexiconEntry: "Sv\u011Brac\xED"
 --- !u!1 &4781943425106537713
 GameObject:
   m_ObjectHideFlags: 0

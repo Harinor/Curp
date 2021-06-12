@@ -49,13 +49,13 @@ public class CameraManager : MonoBehaviour
                     break;
             }
         }
-    }  
-        
+    }         
+
     public void ShowSelectionMenu()
     {
         if (isTransitioning == false)
         {
-            StartCoroutine(AdjustSelectionMenuCoroutine(SelectionState.Displayed, 5f));   
+            StartCoroutine(AdjustSelectionMenuCoroutine(SelectionState.Displayed, .05f));   
         }      
     }
 
@@ -63,7 +63,7 @@ public class CameraManager : MonoBehaviour
     {
         if (isTransitioning == false)
         {
-            StartCoroutine(AdjustSelectionMenuCoroutine(SelectionState.Hidden, 5f));
+            StartCoroutine(AdjustSelectionMenuCoroutine(SelectionState.Hidden, .02f));
             Selections.instance.UpdatePreviewCameras();
         }
     }
@@ -99,8 +99,8 @@ public class CameraManager : MonoBehaviour
         {
             //timeElapsed += Time.time;
             timeElapsed = Time.unscaledTime - transitionStartedTime;
-            float newPrimaryCameraPosY = Mathf.Lerp(primaryCamera.rect.y, targetPrimaryPosY, Time.deltaTime * (transitionSpeed + timeElapsed));
-            float newSecondaryCameraPosY = Mathf.Lerp(secondaryCamera.rect.y, targetSecondaryPosY, Time.deltaTime * (transitionSpeed + timeElapsed));
+            float newPrimaryCameraPosY = Mathf.Lerp(primaryCamera.rect.y, targetPrimaryPosY, timeElapsed * (transitionSpeed + timeElapsed));
+            float newSecondaryCameraPosY = Mathf.Lerp(secondaryCamera.rect.y, targetSecondaryPosY, timeElapsed * (transitionSpeed + timeElapsed));
 
             primaryCamera.rect = new Rect(0, newPrimaryCameraPosY, 1, 1);
             secondaryCamera.rect = new Rect(0, newSecondaryCameraPosY, 1, 1);

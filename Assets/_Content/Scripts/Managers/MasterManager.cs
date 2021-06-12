@@ -25,6 +25,7 @@ public class MasterManager : MonoBehaviour
     [Tooltip("These prefabs are instantiated at start up to be viewed by the primary camera.")]
     [SerializeField] List<GameObject> availableVehicles = new List<GameObject>();
     public static List<GameObject> AvailableVehicles => instance.availableVehicles;
+    public  List<GameObject> AvailableVehiclesLocal => availableVehicles;
 
     Vehicle activeVehicle;
     public static Vehicle ActiveVehicle
@@ -169,9 +170,19 @@ public class MasterManager : MonoBehaviour
         UI_Manager.instance.ToggleInfoPanel();
     }
 
+    public void ToggleHelpPanel()
+    {
+        UI_Manager.instance.ToggleHelpPanel();
+    }
+
     public void ToggleSettingsPanel()
     {
         UI_Manager.instance.ToggleSettingsPanel();
+    }
+
+    public void ToggleHelpButton(bool value)
+    {
+        UI_Manager.instance.ToggleHelpButton(value);
     }
 
     public void Quit()
