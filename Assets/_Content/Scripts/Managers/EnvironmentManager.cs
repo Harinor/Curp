@@ -42,7 +42,7 @@ public class EnvironmentManager : MonoBehaviour
             2 => natureMat,
             _ => null,
         };
-
+        
         foreach (Renderer renderer in environment.horizons)
         {
             if (newBackgroundMaterial == null)

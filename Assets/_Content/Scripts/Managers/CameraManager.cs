@@ -8,6 +8,7 @@ public class CameraManager : MonoBehaviour
     public Camera primaryCamera;
     public Camera secondaryCamera;
     public OrbitalCamera orbitalCamera;
+    public GameObject interiorCameraObject;
 
     [Header("Setting")]
     [SerializeField] float primaryCameraLimitY = 0.5f;
@@ -119,5 +120,9 @@ public class CameraManager : MonoBehaviour
         orbitalCamera.ToggleCamera();    
     }
 
+    public void ToggleInteriorCamera()
+    {
+        interiorCameraObject.SetActive(!interiorCameraObject.activeSelf);
+    }
     #endregion
 }
