@@ -7,6 +7,8 @@ using System;
 
 public class UI_Manager : MonoBehaviour
 {
+    public static UI_Manager instance;
+
     public GameObject infoPanel;
     public GameObject settingsPanel;
     public GameObject helpPanel;
@@ -20,8 +22,7 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] TextMeshProUGUI infoText;
     [SerializeField] TextMeshProUGUI infoPrize;
 
-
-    public static UI_Manager instance;
+    private bool compactMenuEnabled;
 
     #region --- UNITY CALLBACKS ----
     private void Start()
@@ -160,12 +161,20 @@ public class UI_Manager : MonoBehaviour
         Dragoman.instance.LoadLanguage(index);
     }
 
-    internal void ToggleHelpButton(bool value)
+    public void ToggleHelpButton(bool value)
     {
         helpButton.SetActive(value);
     }
 
+    public void ToggleCompactMenuButton(bool value)
+    {
+        compactMenuEnabled = value;
+    }
 
+    public void ToggleMainMenuButton()
+    {
+        
+    }
     #endregion
 } 
 

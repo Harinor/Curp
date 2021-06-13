@@ -56,8 +56,14 @@ public class Paparazzi : MonoBehaviour
         }
         else
         {
+            string screenshotsPath = Path.Combine(Application.dataPath, "screenshots");
+            if (!Directory.Exists(screenshotsPath))
+            {
+                Directory.CreateDirectory(screenshotsPath);
+            }
+
             byte[] byteArray = renderResult.EncodeToPNG();
-            File.WriteAllBytes(path, byteArray);
+            File.WriteAllBytes(Path.Combine(screenshotsPath, filename), byteArray);
         }
 
         RenderTexture.ReleaseTemporary(renderTexture);

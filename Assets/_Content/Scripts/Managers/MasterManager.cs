@@ -185,6 +185,16 @@ public class MasterManager : MonoBehaviour
         UI_Manager.instance.ToggleHelpButton(value);
     }
 
+    public void ToggleCompactMenuButton(bool value)
+    {
+        UI_Manager.instance.ToggleCompactMenuButton(value);
+    }
+
+    public void ToggleMainMenu()
+    {
+        UI_Manager.instance.ToggleMainMenuButton();
+    }
+
     public void Quit()
     {
 #if UNITY_EDITOR

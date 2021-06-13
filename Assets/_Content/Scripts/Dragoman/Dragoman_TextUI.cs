@@ -16,6 +16,7 @@ public class Dragoman_TextUI : MonoBehaviour
     [Header("Lexicon")]
     public string lexiconEntry;
 
+    [ContextMenu("Initialize / Update")]
     public void Init()
     {
         if (disableForThisObject) return;
