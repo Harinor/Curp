@@ -137,6 +137,7 @@ public class UI_Manager : MonoBehaviour
             descriptionBuilder.AppendLine("<u>");
             descriptionBuilder.Append(Dragoman.Lexicon(spec.name));
             descriptionBuilder.Append("</u>: ");
+            //descriptionBuilder.AppendLine();
             descriptionBuilder.Append(Dragoman.Lexicon(spec.value));
             if (!String.IsNullOrEmpty(spec.unit))
             {

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: SpoilerVariant_2
   m_EditorClassIdentifier: 
   Name: Spoiler 2
-  previewPrefab: {fileID: 100000, guid: 3fc3345c2f6820b4795f188afec71019, type: 3}
+  previewPrefab: {fileID: 7174220827610861401, guid: 1996d108eff46824c84e6b40af46a5a1, type: 3}
   previewScale: 0.5
-  spoiler: {fileID: 5118911368796202686, guid: a21ea8d9d916cd448881698235ca9b19, type: 3}
+  spoiler: {fileID: 7174220827610861401, guid: 1996d108eff46824c84e6b40af46a5a1, type: 3}
   spoilerSlot: spoiler_slot
+  syncBodyColor: 1

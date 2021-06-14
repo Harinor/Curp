@@ -2376,7 +2376,7 @@ MonoBehaviour:
     activeVariant: 0
     previewCamera: {fileID: 7624645376098806515}
   information:
-    price: 999
+    price: 999.99
     description: Modern and elegant vehicle for the discerning driver!
     specifications:
     - name: Odometer

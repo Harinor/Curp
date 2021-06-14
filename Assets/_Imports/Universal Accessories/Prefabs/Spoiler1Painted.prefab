@@ -504,7 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021bd99a9fa291444a17736606dcf16e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  remote: 0
+  remote: 1
   renderers: []
 --- !u!1 &6927925158786504822
 GameObject:
