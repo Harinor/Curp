@@ -152,26 +152,6 @@ public class UI_Manager : MonoBehaviour
         infoPrize.text = "$" + MasterManager.ActiveVehicle.information.price.ToString();
     }
 
-    //private void UpdateInfoPanel()
-    //{
-    //    infoHeader.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.Name);
-
-    //    infoText.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.information.description);
-    //    infoText.text += "\n";
-    //    foreach (Vehicle.Information.Specification spec in MasterManager.ActiveVehicle.information.specifications)
-    //    {
-    //        string nextLine = "\n" 
-    //            + Dragoman.Lexicon(spec.name) + ": "
-    //            + Dragoman.Lexicon(spec.value) + " " 
-    //            + (String.IsNullOrEmpty(spec.unit) ? string.Empty : Dragoman.Lexicon(spec.unit));
-    //        infoText.text += nextLine;
-    //    }
-
-    //    infoPrize.text = "$" + MasterManager.ActiveVehicle.information.price.ToString();
-    //}
-
-
-
     public void ToggleHelpPanel()
     {
         if (helpPanel != null)
@@ -223,6 +203,7 @@ public class UI_Manager : MonoBehaviour
     public void ToggleCompactMenuButton(bool value)
     {
         compactMenuEnabled = value;
+        burgerPanel.SetActive(value);
     }
 
     public void ToggleMainMenu()
