@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using System;
+using UnityEngine.UI;
+using System.Text;
 
 public class UI_Manager : MonoBehaviour
 {
@@ -23,6 +25,8 @@ public class UI_Manager : MonoBehaviour
     public TMP_Dropdown dropdown;
     public TMP_Dropdown dropdownEnvironment;
     public GameObject mainCanvas;
+
+    public CanvasScaler scaler;
 
     [Header("Information")]
     [SerializeField] TextMeshProUGUI infoHeader;
@@ -46,6 +50,18 @@ public class UI_Manager : MonoBehaviour
 
         SetUpLanguageDropdown();
         SetUpEnvironmentDropdown();
+    }
+
+    private void Update()
+    {
+        if (IsWidescreen())
+        {
+            scaler.matchWidthOrHeight = 1;
+        }
+        else
+        {
+            scaler.matchWidthOrHeight = 0;
+        }
     }
 
     #endregion
@@ -106,20 +122,54 @@ public class UI_Manager : MonoBehaviour
 
     private void UpdateInfoPanel()
     {
+        //-- HEADER ---
         infoHeader.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.Name);
-        infoText.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.information.description);
-        infoText.text += "\n";
+
+        //---TEXT---
+        StringBuilder descriptionBuilder = new StringBuilder(300);
+        descriptionBuilder.Append("<i>");
+        descriptionBuilder.Append(Dragoman.Lexicon(MasterManager.ActiveVehicle.information.description));
+        descriptionBuilder.Append("</i>");
+        descriptionBuilder.AppendLine();
+
         foreach (Vehicle.Information.Specification spec in MasterManager.ActiveVehicle.information.specifications)
         {
-            string nextLine = "\n" 
-                + Dragoman.Lexicon(spec.name) + ": "
-                + Dragoman.Lexicon(spec.value) + " " 
-                + (String.IsNullOrEmpty(spec.unit) ? string.Empty : Dragoman.Lexicon(spec.unit));
-            infoText.text += nextLine;
+            descriptionBuilder.AppendLine("<u>");
+            descriptionBuilder.Append(Dragoman.Lexicon(spec.name));
+            descriptionBuilder.Append("</u>: ");
+            descriptionBuilder.Append(Dragoman.Lexicon(spec.value));
+            if (!String.IsNullOrEmpty(spec.unit))
+            {
+                descriptionBuilder.Append(" ");
+                descriptionBuilder.Append(Dragoman.Lexicon(spec.unit));  
+            }                  
         }
 
+        infoText.text = descriptionBuilder.ToString();
+
+        //---PRIZE---
         infoPrize.text = "$" + MasterManager.ActiveVehicle.information.price.ToString();
     }
+
+    //private void UpdateInfoPanel()
+    //{
+    //    infoHeader.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.Name);
+
+    //    infoText.text = Dragoman.Lexicon(MasterManager.ActiveVehicle.information.description);
+    //    infoText.text += "\n";
+    //    foreach (Vehicle.Information.Specification spec in MasterManager.ActiveVehicle.information.specifications)
+    //    {
+    //        string nextLine = "\n" 
+    //            + Dragoman.Lexicon(spec.name) + ": "
+    //            + Dragoman.Lexicon(spec.value) + " " 
+    //            + (String.IsNullOrEmpty(spec.unit) ? string.Empty : Dragoman.Lexicon(spec.unit));
+    //        infoText.text += nextLine;
+    //    }
+
+    //    infoPrize.text = "$" + MasterManager.ActiveVehicle.information.price.ToString();
+    //}
+
+
 
     public void ToggleHelpPanel()
     {
@@ -196,6 +246,16 @@ public class UI_Manager : MonoBehaviour
                 helpPanel.SetActive(true);
             }
         }
+    }
+
+    private bool IsWidescreen()
+    {
+        if (Screen.width > Screen.height)
+        {
+            return true;
+        }
+
+        return false;
     }
     #endregion
 } 

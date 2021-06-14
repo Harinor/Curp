@@ -64,7 +64,6 @@ public class MasterManager : MonoBehaviour
     private void Start()
     {
         cameraManager = GetComponent<CameraManager>();
-        Debug.Log($"{Screen.width}:{Screen.height}");
         StartCoroutine(PostStart());
     }
 
@@ -151,7 +150,7 @@ public class MasterManager : MonoBehaviour
                 ActiveVehicle.lights.SetActive(false);
                 if (defaultDirectionalLight != null)
                 {
-                    defaultDirectionalLight.SetActive(false);
+                    defaultDirectionalLight.SetActive(true);
                 }
             }
             else
@@ -159,7 +158,7 @@ public class MasterManager : MonoBehaviour
                 ActiveVehicle.lights.SetActive(true);
                 if (defaultDirectionalLight != null)
                 {
-                    defaultDirectionalLight.SetActive(true);
+                    defaultDirectionalLight.SetActive(false);
                 }
             }
         }
