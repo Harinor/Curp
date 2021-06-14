@@ -63,7 +63,6 @@ crashlytics-build.properties
 *.exe
 *.dll
 *.pdf
-*.txt
 *.log
  
 # IgnoreTheseFolders
