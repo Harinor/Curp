@@ -180,11 +180,6 @@ public class MasterManager : MonoBehaviour
         UI_Manager.instance.ToggleSettingsPanel();
     }
 
-    public void ToggleHelpButton(bool value)
-    {
-        UI_Manager.instance.ToggleHelpButton(value);
-    }
-
     public void ToggleCompactMenuButton(bool value)
     {
         UI_Manager.instance.ToggleCompactMenuButton(value);
@@ -192,7 +187,7 @@ public class MasterManager : MonoBehaviour
 
     public void ToggleMainMenu()
     {
-        UI_Manager.instance.ToggleMainMenuButton();
+        UI_Manager.instance.ToggleMainMenu();
     }
 
     public void Quit()

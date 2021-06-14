@@ -39,12 +39,38 @@ public class Vehicle : MonoBehaviour
         }
     }
 
+    #region --- UNITY CALLBACKS ---
+    private void Start()
+    {
+        if (bodyMaterial == null)
+        {
+            bodyMaterial = GetDefaultMaterial();
+        }
+    } 
+    #endregion
 
     #region --- METHODS ---
     public void UpdateVehicleMaterial()
     {
         BroadcastMessage("OnVehicleMaterialUpdated", SendMessageOptions.DontRequireReceiver);
     } 
+
+    private Material GetDefaultMaterial()
+    {
+        Transform body = transform.Find("body");
+        if (body != null && body.TryGetComponent(out Renderer renderer))
+        {
+            return renderer.material;
+        }
+
+        Renderer firstRenderer = GetComponentInChildren<Renderer>();
+        if (firstRenderer != null )
+        {
+            return firstRenderer.material;
+        }
+
+        return null;
+    }
     #endregion
 
     #region --- INNER CLASSES ---

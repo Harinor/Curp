@@ -11,8 +11,15 @@ public class UI_Manager : MonoBehaviour
 
     public GameObject infoPanel;
     public GameObject settingsPanel;
+    /// <summary>
+    /// This is the full menu with descriptions
+    /// </summary>
     public GameObject helpPanel;
-    public GameObject helpButton;
+    /// <summary>
+    /// This is the compact menu panel
+    /// </summary>
+    public GameObject burgerPanel;
+
     public TMP_Dropdown dropdown;
     public TMP_Dropdown dropdownEnvironment;
     public GameObject mainCanvas;
@@ -22,7 +29,8 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] TextMeshProUGUI infoText;
     [SerializeField] TextMeshProUGUI infoPrize;
 
-    private bool compactMenuEnabled;
+    private bool showingMainMenu = false;
+    private bool compactMenuEnabled = false;
 
     #region --- UNITY CALLBACKS ----
     private void Start()
@@ -161,19 +169,33 @@ public class UI_Manager : MonoBehaviour
         Dragoman.instance.LoadLanguage(index);
     }
 
-    public void ToggleHelpButton(bool value)
-    {
-        helpButton.SetActive(value);
-    }
-
     public void ToggleCompactMenuButton(bool value)
     {
         compactMenuEnabled = value;
     }
 
-    public void ToggleMainMenuButton()
+    public void ToggleMainMenu()
     {
-        
+        if (showingMainMenu)
+        {
+            showingMainMenu = false;
+            burgerPanel.SetActive(false);
+            helpPanel.SetActive(false);
+        }
+        else
+        {
+            showingMainMenu = true;
+            if (compactMenuEnabled)
+            {
+                helpPanel.SetActive(false);
+                burgerPanel.SetActive(true);
+            }
+            else
+            {
+                burgerPanel.SetActive(false);
+                helpPanel.SetActive(true);
+            }
+        }
     }
     #endregion
 } 
