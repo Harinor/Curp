@@ -27,6 +27,21 @@ public class SmoothMouseLook : MonoBehaviour
 
 	Quaternion originalRotation;
 
+	#region ---UnityCallbacks---
+	private void Start()
+	{
+		Rigidbody rb = GetComponent<Rigidbody>();
+		if (rb)
+			rb.freezeRotation = true;
+		originalRotation = transform.localRotation;
+
+		if (IsTouchScreen())
+		{
+			sensitivityX = .1f;
+			sensitivityY = .1f;
+		}
+	}
+
 	void Update()
 	{
 		if (Input.GetMouseButton(0))
@@ -82,16 +97,9 @@ public class SmoothMouseLook : MonoBehaviour
 
 
 	}
+    #endregion
 
-	void Start()
-	{
-		Rigidbody rb = GetComponent<Rigidbody>();
-		if (rb)
-			rb.freezeRotation = true;
-		originalRotation = transform.localRotation;
-	}
-
-	public static float ClampAngle(float angle, float min, float max)
+    public static float ClampAngle(float angle, float min, float max)
 	{
 		angle = angle % 360;
 		if ((angle >= -360F) && (angle <= 360F))
