@@ -45,6 +45,7 @@ public class MasterManager : MonoBehaviour
     public CameraManager cameraManager;
 
     public GameObject defaultDirectionalLight;
+    public Material defaultSkybox;
 
     #region --- EVENTS ---
     public delegate void OnActiveVehicleMaterialChangedEvent();
@@ -57,6 +58,10 @@ public class MasterManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+        }
+        if (defaultSkybox == null)
+        {
+            defaultSkybox = RenderSettings.skybox;
         }
         InitializeVehicles();
     }
@@ -151,6 +156,7 @@ public class MasterManager : MonoBehaviour
                 if (defaultDirectionalLight != null)
                 {
                     defaultDirectionalLight.SetActive(true);
+                    RenderSettings.skybox = defaultSkybox;
                 }
             }
             else
@@ -159,6 +165,7 @@ public class MasterManager : MonoBehaviour
                 if (defaultDirectionalLight != null)
                 {
                     defaultDirectionalLight.SetActive(false);
+                    RenderSettings.skybox = null;
                 }
             }
         }
@@ -214,5 +221,9 @@ public class MasterManager : MonoBehaviour
         OnActiveVehicleMaterialChanged?.Invoke();
     }
 
+    public void SetCameraIsIdleAllowed(bool value)
+    {
+        cameraManager.orbitalCamera.SetIsIdleAllowed(value);
+    }
     #endregion
 }

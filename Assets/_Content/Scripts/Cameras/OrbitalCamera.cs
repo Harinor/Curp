@@ -25,7 +25,6 @@ public class OrbitalCamera : MonoBehaviour
     float yIdleRot = 0.01f;
 
     private bool rotationEnabled = true;
-    [SerializeField] Button rotButton;
 
     #region ---UnityCallbacks---
     private void Start()
@@ -35,16 +34,11 @@ public class OrbitalCamera : MonoBehaviour
             sensitivity = 5f;
             yIdleRot *= 100;
         }
-
-        if (rotButton)
-        {
-            rotButton.interactable = (!rotationEnabled);
-        }
     }
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !IsPointerOverUIObject() && IsInValidScreenSection() && (rotationEnabled || rotButton.gameObject.activeSelf == false))
+        if (Input.GetMouseButton(0) && !IsPointerOverUIObject() && IsInValidScreenSection() && rotationEnabled)
         {
             ProcessInputActive();
         }
@@ -64,10 +58,9 @@ public class OrbitalCamera : MonoBehaviour
     private void ProcessInputIdle()
     {
         inactivityTimer += Time.deltaTime;
-        if (inactivityTimer > inactivityLimit && isIdleAllowed)
+        if ((inactivityTimer > inactivityLimit) && isIdleAllowed)
         {
             MasterManager.IsIdle = true;
-            DeactivateCameraInputRotation();
             UpdateCameraPos();
         }
     }
@@ -131,25 +124,6 @@ public class OrbitalCamera : MonoBehaviour
 
         return false;
     } 
-
-    public void ToggleCamera()
-    {
-        rotationEnabled = !rotationEnabled;
-        if (rotButton)
-        {
-            rotButton.interactable = (!rotationEnabled);
-            inactivityTimer = 0;
-        }
-    }
-
-    public void DeactivateCameraInputRotation()
-    {
-        rotationEnabled = false;
-        if (rotButton)
-        {
-            rotButton.interactable = (true);
-        }
-    }
 
     private bool IsTouchScreen()
     {

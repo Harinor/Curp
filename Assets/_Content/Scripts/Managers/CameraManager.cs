@@ -115,14 +115,10 @@ public class CameraManager : MonoBehaviour
         //Debug.LogError("Adjustment done!");
     }
 
-    public void ToggleCamera()
-    {
-        orbitalCamera.ToggleCamera();    
-    }
-
     public void ToggleInteriorCamera()
     {
         interiorCameraObject.SetActive(!interiorCameraObject.activeSelf);
     }
+
     #endregion
 }
